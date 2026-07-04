@@ -46,7 +46,7 @@
         #result.container {
             background-color: transparent;
             box-shadow: none;
-            padding: 20px 10px;
+            padding: 0; /* ลด padding เพื่อให้พื้นที่แคปรูปกว้างเต็ม */
         }
 
         .active { display: block; animation: fadeIn 0.5s; }
@@ -72,14 +72,17 @@
 
         /* จัด Layout ให้ Dropdown อายุ */
         .age-container { display: flex; gap: 10px; }
-        .age-container select { cursor: pointer; appearance: auto; }
+        /* บังคับให้ Dropdown แสดงลูกศรให้กดง่ายๆ */
+        select.input-field { 
+            cursor: pointer; 
+            appearance: auto !important; 
+            -webkit-appearance: auto !important; 
+            -moz-appearance: auto !important;
+        }
 
         /* แถบเลื่อนน้ำหนัก (Slider) */
         input[type="range"] {
-            width: 100%;
-            accent-color: var(--primary-btn);
-            margin-top: 10px;
-            cursor: pointer;
+            width: 100%; accent-color: var(--primary-btn); margin-top: 10px; cursor: pointer;
         }
 
         .file-upload {
@@ -91,12 +94,8 @@
         .file-upload input[type="file"] { display: none; }
         
         .preview-image {
-            width: 100%;
-            max-height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            display: none;
-            margin-top: 10px;
+            width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px;
+            display: none; margin-top: 10px;
         }
         
         .upload-success { color: #8F7B61; font-weight: 400; display: none; margin-top: 10px; font-size: 0.9rem; text-decoration: underline;}
@@ -127,14 +126,23 @@
             align-items: center; justify-content: center; border-radius: 15px; color: #999; border: 2px dashed #CCC;
         }
 
+        /* --- พื้นที่สำหรับการแคปเจอร์รูปภาพ (รวมทั้งหมดไว้ด้วยกัน) --- */
+        #capture-area {
+            position: relative;
+            background-color: var(--bg-color);
+            padding: 40px 20px;
+            border-radius: 20px;
+            overflow: hidden; /* ให้ลายแมวไม่ล้นออกนอกกรอบเวลาแคป */
+            margin-bottom: 20px;
+        }
+
         /* --- ดีไซน์ Minimalist Photocard --- */
         .id-card-wrapper {
             position: relative;
-            margin: 40px auto 30px; 
+            margin: 0 auto 30px; 
             width: 280px;
             transition: transform 0.3s ease;
         }
-        .id-card-wrapper:hover { transform: translateY(-5px); }
 
         .id-card {
             background: #FFFFFF;
@@ -148,11 +156,8 @@
         }
 
         .id-hole {
-            width: 50px; 
-            height: 8px;
-            background-color: var(--bg-color); 
-            border-radius: 10px;
-            margin: -10px auto 25px; 
+            width: 50px; height: 8px; background-color: var(--bg-color); 
+            border-radius: 10px; margin: -10px auto 25px; 
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); 
         }
 
@@ -174,35 +179,41 @@
             filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.1));
         }
 
+        /* ปรับให้อ่านง่าย จัดกึ่งกลางตามภาพเรฟเฟอเรนซ์ */
         .result-description {
-            font-size: 1.05rem; line-height: 1.7; margin: 0 auto 25px;
+            font-size: 1.05rem; line-height: 1.7; margin: 0 auto 20px;
             max-width: 320px; color: var(--text-color); background: #FFFFFF;
             padding: 20px; border-radius: 16px; box-shadow: 0 4px 15px rgba(83, 52, 34, 0.05);
+            text-align: center; /* จัดกึ่งกลาง */
+            position: relative; z-index: 2;
         }
 
         .result-tips {
             font-size: 1.05rem; font-weight: 600; color: var(--text-color);
-            margin-bottom: 35px; background: #F4EFE6; 
-            padding: 15px 20px; border-radius: 12px; display: inline-block;
+            margin: 0 auto 20px; background: #F4EFE6; 
+            padding: 20px; border-radius: 12px; display: block;
+            max-width: 320px; box-sizing: border-box; text-align: center; /* จัดกึ่งกลาง */
+            position: relative; z-index: 2;
         }
         .result-tips span { font-weight: 400; display: block; margin-top: 5px; }
 
         .footer-credit {
             font-size: 0.85rem; color: var(--text-color); opacity: 0.6;
-            margin-bottom: 25px; letter-spacing: 1px; text-transform: uppercase;
+            margin-top: 30px; letter-spacing: 1px; text-transform: lowercase;
+            position: relative; z-index: 2;
         }
 
+        /* ลายแมวพาสเทลพื้นหลังสำหรับรูปเซฟ */
         .bg-pattern {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: -1; display: none; overflow: hidden;
+            pointer-events: none; z-index: 1; overflow: hidden;
         }
-        .active .bg-pattern { display: block; } 
         
         .cat-shape { position: absolute; font-size: 100px; opacity: 0.1; filter: blur(1px); }
-        .cat-shape.green { color: #D5E8D4; top: 10%; left: -5%; transform: rotate(-15deg); }
-        .cat-shape.pink { color: #F8CECC; top: -5%; right: 5%; transform: rotate(20deg); font-size: 150px;}
-        .cat-shape.green2 { color: #D5E8D4; bottom: 20%; left: 5%; transform: rotate(10deg); font-size: 120px;}
-        .cat-shape.pink2 { color: #F8CECC; bottom: 5%; right: -5%; transform: rotate(-25deg); }
+        .cat-shape.green { color: #D5E8D4; top: 5%; left: -5%; transform: rotate(-15deg); }
+        .cat-shape.pink { color: #F8CECC; top: 20%; right: -10%; transform: rotate(20deg); font-size: 130px;}
+        .cat-shape.green2 { color: #D5E8D4; bottom: 20%; left: -5%; transform: rotate(10deg); font-size: 120px;}
+        .cat-shape.pink2 { color: #F8CECC; bottom: -5%; right: -5%; transform: rotate(-25deg); }
     </style>
 </head>
 <body>
@@ -276,39 +287,39 @@
             <input type="text" id="catFood" class="input-field" placeholder="ยี่ห้อ หรือ สูตรอาหาร">
         </div>
 
-        <button class="primary-btn" onclick="startQuiz()">เริ่มแคสติ้งบทบาทเลย! ✨</button>
+        <button type="button" class="primary-btn" onclick="startQuiz()">เริ่มแคสติ้งบทบาทเลย! ✨</button>
     </div>
 
     <div id="q1" class="container">
         <h2>1. เวลาคุณกำลังกินข้าว หรือกินขนม <span class="display-cat-name">เจ้านาย</span> จะ...</h2>
-        <button class="choice-btn" onclick="nextQuestion(1, 'A')">มานั่งจ้องหน้าจากที่สูง กดดันเงียบๆ</button>
-        <button class="choice-btn" onclick="nextQuestion(1, 'B')">เอาหัวมาไถๆ ทำตาปริบๆ ขอชิมหน่อย</button>
-        <button class="choice-btn" onclick="nextQuestion(1, 'C')">นอนดูอยู่ไกลๆ ไม่สนโลก</button>
-        <button class="choice-btn" onclick="nextQuestion(1, 'D')">พยายามจะเอามือมาล้วง หรือขโมยไปต่อหน้าต่อตา!</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(1, 'A')">มานั่งจ้องหน้าจากที่สูง กดดันเงียบๆ</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(1, 'B')">เอาหัวมาไถๆ ทำตาปริบๆ ขอชิมหน่อย</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(1, 'C')">นอนดูอยู่ไกลๆ ไม่สนโลก</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(1, 'D')">พยายามจะเอามือมาล้วง หรือขโมยไปต่อหน้าต่อตา!</button>
     </div>
 
     <div id="q2" class="container">
         <h2>2. เวลาทำของตกแตก หรือทำผิด <span class="display-cat-name">เจ้านาย</span> จะแสดงอาการยังไง?</h2>
-        <button class="choice-btn" onclick="nextQuestion(2, 'A')">เชิดใส่ ไม่แคร์ นุดเก็บกวาดไปสิ</button>
-        <button class="choice-btn" onclick="nextQuestion(2, 'B')">ทำหน้ารู้สึกผิดจนนุดโกรธไม่ลง</button>
-        <button class="choice-btn" onclick="nextQuestion(2, 'C')">เดินหนีเงียบๆ ไปซ่อนตัวใต้โซฟา</button>
-        <button class="choice-btn" onclick="nextQuestion(2, 'D')">วิ่งหนีสุดชีวิต แถมทำของชิ้นอื่นพังเพิ่ม!</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(2, 'A')">เชิดใส่ ไม่แคร์ นุดเก็บกวาดไปสิ</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(2, 'B')">ทำหน้ารู้สึกผิดจนนุดโกรธไม่ลง</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(2, 'C')">เดินหนีเงียบๆ ไปซ่อนตัวใต้โซฟา</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(2, 'D')">วิ่งหนีสุดชีวิต แถมทำของชิ้นอื่นพังเพิ่ม!</button>
     </div>
 
     <div id="q3" class="container">
         <h2>3. ถ้ามีกล่องพัสดุมาส่งที่บ้าน...</h2>
-        <button class="choice-btn" onclick="nextQuestion(3, 'A')">กระโดดขึ้นไปนั่งทับของข้างใน ประกาศความเป็นเจ้าของ</button>
-        <button class="choice-btn" onclick="nextQuestion(3, 'B')">เข้าไปนอนซุกอ้อนๆ ในกล่อง</button>
-        <button class="choice-btn" onclick="nextQuestion(3, 'C')">ดมๆ เช็กความปลอดภัย แล้วเดินจากไป</button>
-        <button class="choice-btn" onclick="nextQuestion(3, 'D')">กัดกล่องกระดาษกระจุยกระจายเต็มบ้าน</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(3, 'A')">กระโดดขึ้นไปนั่งทับของข้างใน ประกาศความเป็นเจ้าของ</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(3, 'B')">เข้าไปนอนซุกอ้อนๆ ในกล่อง</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(3, 'C')">ดมๆ เช็กความปลอดภัย แล้วเดินจากไป</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(3, 'D')">กัดกล่องกระดาษกระจุยกระจายเต็มบ้าน</button>
     </div>
 
     <div id="q4" class="container">
         <h2>4. ท่านอนประจำของ <span class="display-cat-name">เจ้านาย</span> คือ...</h2>
-        <button class="choice-btn" onclick="nextQuestion(4, 'A')">เหยียดตัวยาวบนคอนโดแมวสูงๆ</button>
-        <button class="choice-btn" onclick="nextQuestion(4, 'B')">ขดตัวกลมซุกอยู่บนตักนุด</button>
-        <button class="choice-btn" onclick="nextQuestion(4, 'C')">นอนซบอยู่ข้างเท้าเงียบๆ</button>
-        <button class="choice-btn" onclick="nextQuestion(4, 'D')">นอนหงายโชว์พุงกลางทางเดินแบบขวางโลก</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(4, 'A')">เหยียดตัวยาวบนคอนโดแมวสูงๆ</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(4, 'B')">ขดตัวกลมซุกอยู่บนตักนุด</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(4, 'C')">นอนซบอยู่ข้างเท้าเงียบๆ</button>
+        <button type="button" class="choice-btn" onclick="nextQuestion(4, 'D')">นอนหงายโชว์พุงกลางทางเดินแบบขวางโลก</button>
     </div>
 
     <div id="bridge" class="container">
@@ -317,38 +328,41 @@
         
         <div class="qr-placeholder">ใส่รูป QR Code ตรงนี้</div> 
         
-        <button class="primary-btn" onclick="showResult()">เปิดบทนักแสดงของฉันเลย ✨</button>
+        <button type="button" class="primary-btn" onclick="showResult()">เปิดบทนักแสดงของฉันเลย ✨</button>
     </div>
 
     <div id="result" class="container">
         
-        <div class="bg-pattern">
-            <div class="cat-shape green">🐱</div>
-            <div class="cat-shape pink">🐱</div>
-            <div class="cat-shape green2">🐱</div>
-            <div class="cat-shape pink2">🐱</div>
-        </div>
+        <div id="capture-area">
+            <div class="bg-pattern">
+                <div class="cat-shape green">🐱</div>
+                <div class="cat-shape pink">🐱</div>
+                <div class="cat-shape green2">🐱</div>
+                <div class="cat-shape pink2">🐱</div>
+            </div>
 
-        <div class="id-card-wrapper" id="captureCard">
-            <div class="id-card">
-                <div class="id-hole"></div>
-                <div class="id-name"><span id="res-name">เจ้านาย</span> is......</div>
-                <div class="id-role" id="res-title">บทบาท</div>
-                
-                <div class="id-photo-container">
-                    <img id="res-photo" class="id-photo" src="https://via.placeholder.com/160x160?text=No+Image" alt="Cat Photo">
-                    <div class="deco-cat">🐈</div>
+            <div class="id-card-wrapper">
+                <div class="id-card">
+                    <div class="id-hole"></div>
+                    <div class="id-name"><span id="res-name">เจ้านาย</span> is......</div>
+                    <div class="id-role" id="res-title">บทบาท</div>
+                    
+                    <div class="id-photo-container">
+                        <img id="res-photo" class="id-photo" src="https://via.placeholder.com/160x160?text=No+Image" alt="Cat Photo">
+                        <div class="deco-cat">🐈</div>
+                    </div>
                 </div>
             </div>
+
+            <div class="result-description" id="res-desc">คำอธิบายบุคลิกตัวละคร</div>
+            <div class="result-tips">วิธีการเอาใจ: <span id="res-tips">ทริคจัดห้อง</span></div>
+            <div class="footer-credit">created by [ชื่อทีมของคุณ] for line openchat</div>
         </div>
 
-        <div class="result-description" id="res-desc">คำอธิบายบุคลิกตัวละคร</div>
-        <div class="result-tips">วิธีการเอาใจ: <span id="res-tips">ทริคจัดห้อง</span></div>
-        
-        <button class="secondary-btn" onclick="downloadImage()">📸 บันทึกรูปลงเครื่อง</button>
-        <a href="#" class="primary-btn" target="_blank">จอย OpenChat คลิก!</a>
-
-        <div class="footer-credit" style="margin-top: 25px;">created by [ชื่อทีม] for line openchat</div>
+        <div style="padding: 0 20px;">
+            <button type="button" class="secondary-btn" onclick="downloadImage()">📸 บันทึกรูปลงเครื่อง</button>
+            <a href="#" class="primary-btn" target="_blank">จอย OpenChat คลิก!</a>
+        </div>
     </div>
 
     <script>
@@ -375,17 +389,17 @@
         }
 
         function startQuiz() {
-            // ระบบตรวจสอบการกรอกข้อมูล (Validation)
+            // ดักจับและตรวจสอบข้อมูล (Validation) - บังคับทุกช่อง
             let nameInput = document.getElementById('catName').value.trim();
             let breedInput = document.getElementById('catBreed').value.trim();
             let foodInput = document.getElementById('catFood').value.trim();
             let yearSelect = document.getElementById('catAgeYear').value;
             let monthSelect = document.getElementById('catAgeMonth').value;
 
-            // เช็คว่าถ้าช่องไหนว่าง หรือยังไม่อัปรูป ให้เด้งแจ้งเตือน
+            // เช็คว่าถ้าช่องไหนว่าง หรือยังไม่อัปรูป ให้เด้งแจ้งเตือนและหยุดการทำงาน
             if (!catProfile.imageDataUrl || nameInput === "" || breedInput === "" || foodInput === "" || yearSelect === "" || monthSelect === "") {
                 alert("แง้ว! 🐾 กรุณาอัปโหลดรูปและกรอกข้อมูลเจ้านายให้ครบทุกช่องก่อนเริ่มควิซนะฮะ");
-                return; // หยุดการทำงาน ไม่ยอมให้ไปหน้าถัดไป
+                return; 
             }
 
             // ถ้าระบุครบ ให้เก็บข้อมูล
@@ -402,13 +416,16 @@
             catProfile.weight = document.getElementById('catWeight').value;
             catProfile.food = foodInput;
 
+            // ส่งรูปภาพที่เลือกไปยังการ์ดผลลัพธ์
             if(catProfile.imageDataUrl) {
                 document.getElementById('res-photo').src = catProfile.imageDataUrl;
             }
 
+            // เปลี่ยนชื่อแมวในคำถาม
             let nameDisplays = document.querySelectorAll('.display-cat-name');
             nameDisplays.forEach(el => { el.innerText = catProfile.name; });
 
+            // ข้ามไปหน้าถัดไป
             document.getElementById('intro').classList.remove('active');
             document.getElementById('q1').classList.add('active');
         }
@@ -465,11 +482,11 @@
 
             if (type === 'A') {
                 title.innerText = "ท่านประธานมาดนิ่ง";
-                desc.innerText = "หยิ่งนิด ๆ ชอบมองนุดจากที่สูง ไม่ค่อยร้องขออะไร แต่ถ้าอยากได้ต้องได้เดี๋ยวนี้! สกินชิพแค่ตอนที่ตัวเองต้องการ แต่ลึก ๆ แล้วหวงนุดมาก";
-                tips.innerText = "อย่าเซ้าซี้ แต่ต้องมีของเล่นมาประเคน";
+                desc.innerText = "มองห่าง ๆ แบบห่วง ๆ ทำเป็นไม่สนใจ\nแต่จริง ๆ แล้ว รักเรายิ่งกว่าอะไร !\nแต่อย่าขอให้เราไปอยู่ใกล้นะ...หนีค่ะ";
+                tips.innerText = "ยังไม่รู้ แต่พิมพ์ไว้ก่อน";
             } else if (type === 'B') {
                 title.innerText = "นางเอกสู้ชีวิต";
-                desc.innerText = "ลูกคุณหนูตกอับ! ขี้อ้อนสุด ๆ ชอบทำตาแป๋วเรียกร้องความสนใจ แค่กระพริบตา นุดก็พร้อมถวายทุกอย่างให้แล้ว";
+                desc.innerText = "ลูกคุณหนูตกอับ! ขี้อ้อนสุด ๆ ชอบทำตาแป๋ว\nเรียกร้องความสนใจ แค่กระพริบตา นุดก็\nพร้อมถวายทุกอย่างให้แล้ว";
                 tips.innerText = "โอ๋เยอะ ๆ อุ้มบ่อย ๆ พร้อมขนมแมวเลีย";
             } else if (type === 'C') {
                 title.innerText = "พระรองแสนดี";
@@ -482,29 +499,20 @@
             }
         }
 
-        // ฟังก์ชันสำหรับบันทึกการ์ดเป็นรูปภาพ
+        // ฟังก์ชันสำหรับแคปเจอร์รูปภาพแบบเต็มใบ
         function downloadImage() {
-            const card = document.getElementById('captureCard');
-            // ซ่อนเงาชั่วคราวก่อนแคป เพื่อป้องกันขอบดำตอนแปลงเป็นภาพ
-            card.style.boxShadow = 'none'; 
+            const captureArea = document.getElementById('capture-area');
             
-            html2canvas(card, {
-                backgroundColor: null, 
-                scale: 2 // เพิ่มความคมชัด
+            html2canvas(captureArea, {
+                backgroundColor: '#FDFBF7', // กำหนดสีพื้นหลังให้ตรงกับธีมเพื่อไม่ให้เป็นขอบดำ
+                scale: 2 // เพิ่มความคมชัดระดับ HD
             }).then(canvas => {
                 let link = document.createElement('a');
                 link.download = catProfile.name + '-result.png'; 
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                
-                // คืนค่าเงากลับมาเหมือนเดิม
-                card.style.boxShadow = '';
             });
         }
     </script>
 </body>
 </html>
-        
-
-            
-
