@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เจ้านายที่บ้านคุณเป็นแมวไทป์ไหน?</title>
+    <title>ถ้าเจ้านายหลุดเข้าไปในซีรีส์ จะได้รับบทเป็นใคร?</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #F9F6F0; 
-            --text-color: #4A3F35; 
+            --bg-color: #FDFBF7; 
+            --text-color: #533422; /* สีน้ำตาลตามเรฟ */
             --primary-btn: #C2A878; 
             --primary-btn-hover: #A68A64;
             --card-bg: #FFFFFF;
             --input-border: #E0D8C3;
+            --id-card-bg: linear-gradient(180deg, #C2D8ED 0%, #9EBCE1 100%);
         }
 
         body {
@@ -25,6 +26,7 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
+            overflow-x: hidden;
         }
 
         .container {
@@ -37,131 +39,188 @@
             text-align: center;
             display: none; 
             box-sizing: border-box;
+            position: relative;
+            z-index: 10;
         }
 
-        .active {
-            display: block; 
-            animation: fadeIn 0.5s;
+        /* สำหรับหน้า Result ให้พื้นหลังโปร่งใสเพื่อโชว์ลวดลายพาสเทล */
+        #result.container {
+            background-color: transparent;
+            box-shadow: none;
+            padding: 20px 10px;
         }
+
+        .active { display: block; animation: fadeIn 0.5s; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        h2 { font-weight: 600; margin-bottom: 20px; font-size: 1.4rem; line-height: 1.5; }
-        p { font-weight: 300; margin-bottom: 30px; line-height: 1.6; }
+        h2 { font-weight: 600; margin-bottom: 20px; font-size: 1.3rem; line-height: 1.5; color: var(--text-color); }
+        p { font-weight: 300; margin-bottom: 30px; line-height: 1.6; color: var(--text-color); }
 
-        /* สไตล์สำหรับช่องกรอกข้อมูล */
-        .input-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 400;
-            font-size: 0.95rem;
-        }
-
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: 400; font-size: 0.95rem; }
+        
         .input-field {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid var(--input-border);
-            border-radius: 12px;
-            font-family: 'Prompt', sans-serif;
-            font-size: 1rem;
-            color: var(--text-color);
-            box-sizing: border-box;
-            transition: border-color 0.3s;
+            width: 100%; padding: 12px 15px; border: 2px solid var(--input-border);
+            border-radius: 12px; font-family: 'Prompt', sans-serif; font-size: 1rem;
+            color: var(--text-color); box-sizing: border-box; transition: border-color 0.3s;
         }
-
-        .input-field:focus {
-            outline: none;
-            border-color: var(--primary-btn);
-        }
+        .input-field:focus { outline: none; border-color: var(--primary-btn); }
 
         .file-upload {
-            border: 2px dashed var(--input-border);
-            padding: 20px;
-            text-align: center;
-            border-radius: 12px;
-            cursor: pointer;
-            margin-bottom: 20px;
-            transition: border-color 0.3s;
+            border: 2px dashed var(--input-border); padding: 20px; text-align: center;
+            border-radius: 12px; cursor: pointer; margin-bottom: 20px; transition: border-color 0.3s; display: block;
         }
-
         .file-upload:hover { border-color: var(--primary-btn); }
         .file-upload input[type="file"] { display: none; }
+        
+        /* แจ้งเตือนเมื่ออัปโหลดรูปสำเร็จ */
+        .upload-success { color: #4CAF50; font-weight: 600; display: none; margin-top: 10px; font-size: 0.9rem;}
 
         .choice-btn {
-            display: block;
-            width: 100%;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            border: 2px solid transparent;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: 'Prompt', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: left;
+            display: block; width: 100%; background-color: var(--bg-color); color: var(--text-color);
+            border: 2px solid transparent; padding: 15px; margin-bottom: 15px; border-radius: 12px;
+            font-size: 1rem; font-family: 'Prompt', sans-serif; cursor: pointer; transition: all 0.3s; text-align: left;
         }
-
-        .choice-btn:hover {
-            border-color: var(--primary-btn);
-            background-color: #FFF;
-        }
+        .choice-btn:hover { border-color: var(--primary-btn); background-color: #FFF; }
 
         .primary-btn {
-            background-color: var(--primary-btn);
-            color: #FFF;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-            width: 100%;
-            margin-top: 10px;
-            font-family: 'Prompt', sans-serif;
-            text-decoration: none;
-            display: inline-block;
-            box-sizing: border-box;
+            background-color: var(--text-color); color: #FFF; border: none; padding: 15px 30px;
+            border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: background 0.3s;
+            width: 100%; margin-top: 10px; font-family: 'Prompt', sans-serif; text-decoration: none; display: inline-block; box-sizing: border-box;
         }
-
-        .primary-btn:hover { background-color: var(--primary-btn-hover); }
+        .primary-btn:hover { opacity: 0.9; }
 
         .qr-placeholder {
-            width: 200px;
-            height: 200px;
-            background-color: #EEE;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 15px;
-            color: #999;
-            border: 2px dashed #CCC;
+            width: 200px; height: 200px; background-color: #EEE; margin: 0 auto 20px; display: flex;
+            align-items: center; justify-content: center; border-radius: 15px; color: #999; border: 2px dashed #CCC;
+        }
+
+        /* --- ดีไซน์บัตร ID Card ตามรูปเรฟเฟอเรนซ์ --- */
+        .id-card-wrapper {
+            position: relative;
+            margin: 60px auto 30px;
+            width: 260px;
+        }
+
+        /* สายคล้องคอ */
+        .lanyard-left, .lanyard-right {
+            position: absolute;
+            width: 14px; height: 120px;
+            background-color: var(--text-color);
+            top: -95px; z-index: 1;
+        }
+        .lanyard-left { left: 35%; transform: rotate(30deg); }
+        .lanyard-right { right: 35%; transform: rotate(-30deg); }
+        .lanyard-clip {
+            position: absolute;
+            width: 0; height: 0;
+            border-left: 15px solid transparent; border-right: 15px solid transparent;
+            border-bottom: 25px solid var(--text-color);
+            top: -15px; left: 50%; transform: translateX(-50%); z-index: 2;
+        }
+
+        /* ตัวบัตร */
+        .id-card {
+            background: var(--id-card-bg);
+            border: 1px solid var(--text-color);
+            border-radius: 12px;
+            padding: 25px 20px;
+            position: relative;
+            z-index: 3;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* รูเจาะบัตร */
+        .id-hole {
+            width: 40px; height: 10px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--text-color);
+            border-radius: 10px;
+            margin: -10px auto 15px;
+        }
+
+        .id-name { font-size: 1.1rem; margin-bottom: 5px; color: var(--text-color); }
+        .id-role { font-size: 1.4rem; font-weight: 600; margin-bottom: 20px; color: var(--text-color); }
+
+        /* กรอบรูปภาพในบัตร */
+        .id-photo-container {
+            width: 160px; height: 160px;
+            margin: 0 auto;
+            border: 1px solid var(--text-color);
+            background-color: #FFF;
+            position: relative;
+            border-radius: 4px;
+            overflow: visible; /* ให้แมวเกาะขอบทะลุออกไปได้ */
+        }
+
+        .id-photo {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+
+        /* แมวจิ๋วเกาะกรอบรูป */
+        .deco-cat {
+            position: absolute;
+            top: -20px; right: -25px;
+            font-size: 40px; /* ใช้ Emoji แก้ขัด หรือเปลี่ยนเป็น img SVG ได้ */
+            transform: rotate(15deg);
+        }
+
+        /* ข้อความอธิบายด้านล่าง */
+        .result-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 0 auto 30px;
+            max-width: 320px;
+            color: var(--text-color);
+        }
+
+        .result-tips {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 40px;
         }
         
-        .result-box { text-align: left; background: var(--bg-color); padding: 20px; border-radius: 15px; margin-bottom: 20px;}
+        .result-tips span { font-weight: 400; }
+
+        .footer-credit {
+            font-size: 0.8rem;
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        /* ลายแมวพาสเทลพื้นหลัง (จำลองด้วย CSS Shapes) */
+        .bg-pattern {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1; display: none; overflow: hidden;
+        }
+        .active .bg-pattern { display: block; } /* โชว์เฉพาะหน้า Result */
+        
+        .cat-shape { position: absolute; font-size: 100px; opacity: 0.15; }
+        .cat-shape.green { color: #D5E8D4; top: 10%; left: -5%; transform: rotate(-15deg); }
+        .cat-shape.pink { color: #F8CECC; top: -5%; right: 5%; transform: rotate(20deg); font-size: 150px;}
+        .cat-shape.green2 { color: #D5E8D4; bottom: 20%; left: 5%; transform: rotate(10deg); font-size: 120px;}
+        .cat-shape.pink2 { color: #F8CECC; bottom: 5%; right: -5%; transform: rotate(-25deg); }
     </style>
 </head>
 <body>
 
-    <!-- หน้าแรก: กรอกข้อมูลเจ้านาย (Intro Step) -->
+    <!-- หน้าแรก: กรอกข้อมูล -->
     <div id="intro" class="container active">
-        <h2>สร้างโปรไฟล์เจ้านาย 🐾</h2>
-        <p>ขอทำความรู้จักเจ้านายของคุณก่อนเริ่มควิซนะ!</p>
+        <h2>สร้างโปรไฟล์นักแสดง 🎬🐾</h2>
+        <p>ขอทำความรู้จักว่าที่ซุปตาร์ก่อนเริ่มควิซนะ!</p>
         
         <label class="file-upload">
-            <input type="file" accept="image/*" id="catPhoto">
-            📸 กดเพื่ออัปโหลดรูปเจ้านาย
+            <input type="file" accept="image/*" id="catPhoto" onchange="previewImage(event)">
+            <span id="uploadText">📸 กดเพื่ออัปโหลดรูปเจ้านาย</span>
+            <div id="uploadSuccess" class="upload-success">อัปโหลดรูปสำเร็จ! ✓</div>
         </label>
 
         <div class="input-group">
@@ -179,69 +238,138 @@
             <input type="text" id="catFood" class="input-field" placeholder="ยี่ห้อ หรือ สูตรอาหาร">
         </div>
 
-        <button class="primary-btn" onclick="startQuiz()">เริ่มทำควิซเลย! ✨</button>
+        <button class="primary-btn" onclick="startQuiz()">เริ่มแคสติ้งบทบาทเลย! ✨</button>
     </div>
 
-    <!-- หน้าเริ่มควิซ (Question 1) -->
+    <!-- ข้อ 1 -->
     <div id="q1" class="container">
-        <h2>1. มุมโปรดในบ้านที่ <span class="display-cat-name">เจ้านาย</span> ชอบนอนที่สุดคือ...</h2>
-        <button class="choice-btn" onclick="nextQuestion(1, 'A')">กลางที่นอนนุดเลย (สายอ้อนตัวยง)</button>
-        <button class="choice-btn" onclick="nextQuestion(1, 'B')">ชั้นวางของสูงๆ หรือบนตู้ (สายสังเกตการณ์)</button>
-        <button class="choice-btn" onclick="nextQuestion(1, 'C')">ในกล่องกระดาษหรือใต้โต๊ะ (สายรักสันโดษ)</button>
-        <button class="choice-btn" onclick="nextQuestion(1, 'D')">หน้าต่าง/ประตู ดูความเคลื่อนไหว (สายชอบผจญภัย)</button>
+        <h2>1. เวลาคุณกำลังกินข้าว หรือกินขนม <span class="display-cat-name">เจ้านาย</span> จะ...</h2>
+        <button class="choice-btn" onclick="nextQuestion(1, 'A')">มานั่งจ้องหน้าจากที่สูง กดดันเงียบๆ</button>
+        <button class="choice-btn" onclick="nextQuestion(1, 'B')">เอาหัวมาไถๆ ทำตาปริบๆ ขอชิมหน่อย</button>
+        <button class="choice-btn" onclick="nextQuestion(1, 'C')">นอนดูอยู่ไกลๆ ไม่สนโลก</button>
+        <button class="choice-btn" onclick="nextQuestion(1, 'D')">พยายามจะเอามือมาล้วง หรือขโมยไปต่อหน้าต่อตา!</button>
     </div>
 
-    <!-- หน้าคำถามที่ 2 -->
+    <!-- ข้อ 2 -->
     <div id="q2" class="container">
-        <h2>2. เวลาเห็นนกหรือแมลงนอกหน้าต่าง พฤติกรรมคือ...</h2>
-        <button class="choice-btn" onclick="nextQuestion(2, 'A')">ร้องเรียกนุดให้มาดูด้วย (สายแชร์ความสุข)</button>
-        <button class="choice-btn" onclick="nextQuestion(2, 'B')">จ้องเขม็งแบบไม่ยอมละสายตา (สายจริงจัง)</button>
-        <button class="choice-btn" onclick="nextQuestion(2, 'C')">ทำเสียง 'จั๊กๆ' ในลำคอ (สายนักล่า)</button>
-        <button class="choice-btn" onclick="nextQuestion(2, 'D')">เฉยๆ แค่มองผ่านๆ (สายปลง)</button>
+        <h2>2. เวลาทำของตกแตก หรือทำผิด <span class="display-cat-name">เจ้านาย</span> จะแสดงอาการยังไง?</h2>
+        <button class="choice-btn" onclick="nextQuestion(2, 'A')">เชิดใส่ ไม่แคร์ นุดเก็บกวาดไปสิ</button>
+        <button class="choice-btn" onclick="nextQuestion(2, 'B')">ทำหน้ารู้สึกผิดจนนุดโกรธไม่ลง</button>
+        <button class="choice-btn" onclick="nextQuestion(2, 'C')">เดินหนีเงียบๆ ไปซ่อนตัวใต้โซฟา</button>
+        <button class="choice-btn" onclick="nextQuestion(2, 'D')">วิ่งหนีสุดชีวิต แถมทำของชิ้นอื่นพังเพิ่ม!</button>
+    </div>
+
+    <!-- ข้อ 3 -->
+    <div id="q3" class="container">
+        <h2>3. ถ้ามีกล่องพัสดุมาส่งที่บ้าน...</h2>
+        <button class="choice-btn" onclick="nextQuestion(3, 'A')">กระโดดขึ้นไปนั่งทับของข้างใน ประกาศความเป็นเจ้าของ</button>
+        <button class="choice-btn" onclick="nextQuestion(3, 'B')">เข้าไปนอนซุกอ้อนๆ ในกล่อง</button>
+        <button class="choice-btn" onclick="nextQuestion(3, 'C')">ดมๆ เช็กความปลอดภัย แล้วเดินจากไป</button>
+        <button class="choice-btn" onclick="nextQuestion(3, 'D')">กัดกล่องกระดาษกระจุยกระจายเต็มบ้าน</button>
+    </div>
+
+    <!-- ข้อ 4 -->
+    <div id="q4" class="container">
+        <h2>4. ท่านอนประจำของ <span class="display-cat-name">เจ้านาย</span> คือ...</h2>
+        <button class="choice-btn" onclick="nextQuestion(4, 'A')">เหยียดตัวยาวบนคอนโดแมวสูงๆ</button>
+        <button class="choice-btn" onclick="nextQuestion(4, 'B')">ขดตัวกลมซุกอยู่บนตักนุด</button>
+        <button class="choice-btn" onclick="nextQuestion(4, 'C')">นอนซบอยู่ข้างเท้าเงียบๆ</button>
+        <button class="choice-btn" onclick="nextQuestion(4, 'D')">นอนหงายโชว์พุงกลางทางเดินแบบขวางโลก</button>
     </div>
 
     <!-- หน้าคั่น (The Bridge) -->
     <div id="bridge" class="container">
-        <h2>🎉 ประมวลผลเสร็จแล้ว! 🐾</h2>
-        <p>ก่อนไปดูว่า <span class="display-cat-name">เจ้านาย</span> เป็นไทป์ไหน... <br>แวะมาสแกน QR Code เข้า OpenChat <strong>[ชื่อกลุ่ม]</strong> ก่อนได้นะ! มีทริคจัดห้องเพียบ✨</p>
+        <h2>🎉 แคสติ้งเสร็จเรียบร้อย! 🎬</h2>
+        <p>ก่อนไปดูว่า <span class="display-cat-name">เจ้านาย</span> ได้รับบทเป็นใคร... <br>แวะสแกน QR Code เข้า OpenChat <strong>[ชื่อกลุ่ม]</strong> ก่อนได้นะ!</p>
         
         <div class="qr-placeholder">ใส่รูป QR Code ตรงนี้</div> 
         
-        <button class="primary-btn" onclick="showResult()">ดูผลทำนายของฉันเลย ✨</button>
+        <button class="primary-btn" onclick="showResult()">เปิดบทนักแสดงของฉันเลย ✨</button>
     </div>
 
-    <!-- หน้าผลลัพธ์ (The Result) -->
+    <!-- หน้าผลลัพธ์ (ดีไซน์ใหม่) -->
     <div id="result" class="container">
-        <h2 id="result-title">เจ้านายของคุณคือ...</h2>
         
-        <div class="result-box">
-            <p id="result-desc">ประมวลผล...</p>
-            <strong>💡 ทริคจัดห้อง:</strong>
-            <p id="result-tips">...</p>
+        <!-- ลวดลายพื้นหลัง -->
+        <div class="bg-pattern">
+            <div class="cat-shape green">🐱</div>
+            <div class="cat-shape pink">🐱</div>
+            <div class="cat-shape green2">🐱</div>
+            <div class="cat-shape pink2">🐱</div>
         </div>
 
-        <p>แคปไปอวดเพื่อนๆ ทาสแมวในกลุ่มกันเถอะ!</p>
-        <a href="#" class="primary-btn" target="_blank">เข้าร่วม OpenChat คลิก!</a>
+        <!-- บัตร ID Card -->
+        <div class="id-card-wrapper">
+            <div class="lanyard-left"></div>
+            <div class="lanyard-right"></div>
+            <div class="lanyard-clip"></div>
+            
+            <div class="id-card">
+                <div class="id-hole"></div>
+                <div class="id-name"><span id="res-name">เจ้านาย</span> is......</div>
+                <div class="id-role" id="res-title">บทบาท</div>
+                
+                <div class="id-photo-container">
+                    <!-- รูปที่อัปโหลดจะมาแสดงตรงนี้ -->
+                    <img id="res-photo" class="id-photo" src="https://via.placeholder.com/160x160?text=No+Image" alt="Cat Photo">
+                    <!-- แมวเกาะขอบ -->
+                    <div class="deco-cat">🐈</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ข้อความอธิบายด้านล่าง -->
+        <div class="result-description" id="res-desc">
+            คำอธิบายบุคลิกตัวละคร
+        </div>
+
+        <div class="result-tips">
+            วิธีการเอาใจ: <span id="res-tips">ทริคจัดห้อง</span>
+        </div>
+
+        <div class="footer-credit">
+            created by [ชื่อทีมของคุณ] for line openchat
+        </div>
+
+        <a href="#" class="primary-btn" style="width: 80%; margin: 0 auto; display: block;" target="_blank">จอย OpenChat คลิก!</a>
     </div>
 
     <script>
         let userAnswers = [];
-        let catProfile = {};
+        let catProfile = {
+            name: "เจ้านาย",
+            age: "",
+            food: "",
+            imageDataUrl: "" // เก็บข้อมูลรูปภาพ
+        };
 
-        // ฟังก์ชันเก็บข้อมูลหน้าแรกก่อนเริ่มควิซ
+        // ฟังก์ชันอ่านไฟล์รูปภาพที่อัปโหลด
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    catProfile.imageDataUrl = e.target.result;
+                    document.getElementById('uploadSuccess').style.display = 'block';
+                    document.getElementById('uploadText').style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
         function startQuiz() {
             let nameInput = document.getElementById('catName').value;
-            catProfile = {
-                name: nameInput || "เจ้านาย", // ถ้าไม่กรอกชื่อ จะใช้คำว่า "เจ้านาย" แทน
-                age: document.getElementById('catAge').value,
-                food: document.getElementById('catFood').value
-            };
+            catProfile.name = nameInput || "เจ้านาย";
+            catProfile.age = document.getElementById('catAge').value;
+            catProfile.food = document.getElementById('catFood').value;
 
-            // อัปเดตชื่อแมวในคำถามให้ดูน่ารักและใส่ใจขึ้น
+            // นำรูปไปใส่รอไว้ในบัตร ID Card เลย
+            if(catProfile.imageDataUrl) {
+                document.getElementById('res-photo').src = catProfile.imageDataUrl;
+            }
+
             let nameDisplays = document.querySelectorAll('.display-cat-name');
-            nameDisplays.forEach(el => {
-                el.innerText = catProfile.name;
-            });
+            nameDisplays.forEach(el => { el.innerText = catProfile.name; });
 
             document.getElementById('intro').classList.remove('active');
             document.getElementById('q1').classList.add('active');
@@ -249,7 +377,6 @@
 
         function nextQuestion(currentQ, answer) {
             userAnswers.push(answer);
-            
             document.getElementById('q' + currentQ).classList.remove('active');
             
             let nextQ = currentQ + 1;
@@ -259,7 +386,8 @@
                 nextElement.classList.add('active');
             } else {
                 document.getElementById('bridge').classList.add('active');
-                saveDataToServer(userAnswers, catProfile);
+                // บันทึกข้อมูล
+                localStorage.setItem('CatSeriesQuizData', JSON.stringify({ catInfo: catProfile, quizAnswers: userAnswers }));
             }
         }
 
@@ -276,38 +404,33 @@
         }
 
         function displayResultContent(type) {
-            const title = document.getElementById('result-title');
-            const desc = document.getElementById('result-desc');
-            const tips = document.getElementById('result-tips');
-            const catName = catProfile.name;
+            document.getElementById('res-name').innerText = catProfile.name;
+            const title = document.getElementById('res-title');
+            const desc = document.getElementById('res-desc');
+            const tips = document.getElementById('res-tips');
 
             if (type === 'A') {
-                title.innerText = catName + " เป็นสายอ้อน ตัวติดหนึบ! 🧡";
-                desc.innerText = "นุดไปไหน ข้าไปด้วย! เป็นแมวที่ต้องการความรักและการมีส่วนร่วมสูงมาก";
-                tips.innerText = "เพิ่มเบาะนอนนุ่มๆ หรือเปลติดกระจกไว้ใกล้ๆ โต๊ะทำงานของคุณ การใช้เฟอร์นิเจอร์สีไม้สว่างจะช่วยให้ห้องดูคลีนและอบอุ่น";
+                title.innerText = "ท่านประธานมาดนิ่ง";
+                desc.innerText = "หยิ่งนิด ๆ ชอบมองนุดจากที่สูง ไม่ค่อยร้องขออะไร แต่ถ้าอยากได้ต้องได้เดี๋ยวนี้! สกินชิพแค่ตอนที่ตัวเองต้องการ แต่ลึก ๆ แล้วหวงนุดมาก";
+                tips.innerText = "อย่าเซ้าซี้ แต่ต้องมีของเล่นมาประเคน";
             } else if (type === 'B') {
-                title.innerText = catName + " เป็นสายสังเกตการณ์ 👀";
-                desc.innerText = "สุขุม นุ่มลึก ชอบประเมินสถานการณ์จากมุมสูง แอบมองนุดอยู่ห่างๆ อย่างห่วงๆ";
-                tips.innerText = "ควรทำชั้นลอยติดผนัง (Cat Step) ให้เขาได้ปีนป่ายขึ้นไปมองวิวรอบห้อง";
+                title.innerText = "นางเอกสู้ชีวิต";
+                desc.innerText = "ลูกคุณหนูตกอับ! ขี้อ้อนสุด ๆ ชอบทำตาแป๋วเรียกร้องความสนใจ แค่กระพริบตา นุดก็พร้อมถวายทุกอย่างให้แล้ว";
+                tips.innerText = "โอ๋เยอะ ๆ อุ้มบ่อย ๆ พร้อมขนมแมวเลีย";
             } else if (type === 'C') {
-                title.innerText = catName + " เป็นสายซุ่ม รักความสงบ 📦";
-                desc.innerText = "ขี้อาย รักความสงบ ชอบขดตัวอยู่ในที่แคบๆ มืดๆ เพราะทำให้รู้สึกปลอดภัย";
-                tips.innerText = "หากล่องไม้ดีไซน์คลีนๆ หรือโต๊ะกลางที่มีช่องด้านล่าง มาวางไว้ตามมุมห้องให้เขาได้ซ่อนตัว";
+                title.innerText = "พระรองแสนดี";
+                desc.innerText = "สายซัพพอร์ตยืนหนึ่ง! เป็นมิตร อยู่ตรงไหนก็หลับได้ ชอบมาป้วนเปี้ยนใกล้ ๆ เป็นเซฟโซนที่อบอุ่นที่สุด";
+                tips.innerText = "ให้พื้นที่ส่วนตัว และลูบหัวก่อนนอนทุกคืน";
             } else {
-                title.innerText = catName + " เป็นสายลุย พลังงานล้น 🚀";
-                desc.innerText = "นักสำรวจประจำบ้าน! พลังงานเยอะ ชอบความท้าทาย";
-                tips.innerText = "จัดมุมฝนเล็บที่แข็งแรง และวางของเล่นที่กระตุ้นสัญชาตญาณนักล่าไว้ตามจุดต่างๆ";
+                title.innerText = "นางร้ายสายแฟชั่น";
+                desc.innerText = "พลังงานล้นเหลือ วิ่งซนทั่วบ้าน วีรกรรมเยอะ สร้างเรื่องปวดหัวให้ทุกวัน แต่นุดก็หลงรักความแสบซนนี้จนถอนตัวไม่ขึ้น";
+                tips.innerText = "ซื้อคอนโดแมวสูง ๆ ให้ปีนป่ายระบายพลังงาน";
             }
-        }
-
-        function saveDataToServer(answers, profile) {
-            let finalData = {
-                catInfo: profile,
-                quizAnswers: answers
-            };
-            localStorage.setItem('CatQuizData', JSON.stringify(finalData));
-            console.log("บันทึกข้อมูลแล้ว:", finalData);
         }
     </script>
 </body>
 </html>
+        
+
+            
+
