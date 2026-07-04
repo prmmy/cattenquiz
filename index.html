@@ -8,12 +8,11 @@
     <style>
         :root {
             --bg-color: #FDFBF7; 
-            --text-color: #533422; /* สีน้ำตาลตามเรฟ */
+            --text-color: #533422; 
             --primary-btn: #C2A878; 
             --primary-btn-hover: #A68A64;
             --card-bg: #FFFFFF;
             --input-border: #E0D8C3;
-            --id-card-bg: linear-gradient(180deg, #C2D8ED 0%, #9EBCE1 100%);
         }
 
         body {
@@ -43,7 +42,6 @@
             z-index: 10;
         }
 
-        /* สำหรับหน้า Result ให้พื้นหลังโปร่งใสเพื่อโชว์ลวดลายพาสเทล */
         #result.container {
             background-color: transparent;
             box-shadow: none;
@@ -77,7 +75,6 @@
         .file-upload:hover { border-color: var(--primary-btn); }
         .file-upload input[type="file"] { display: none; }
         
-        /* แจ้งเตือนเมื่ออัปโหลดรูปสำเร็จ */
         .upload-success { color: #4CAF50; font-weight: 600; display: none; margin-top: 10px; font-size: 0.9rem;}
 
         .choice-btn {
@@ -99,7 +96,7 @@
             align-items: center; justify-content: center; border-radius: 15px; color: #999; border: 2px dashed #CCC;
         }
 
-/* --- ดีไซน์ใหม่: Minimalist Photocard / Ticket --- */
+        /* --- ดีไซน์ Minimalist Photocard --- */
         .id-card-wrapper {
             position: relative;
             margin: 40px auto 30px; 
@@ -108,10 +105,9 @@
         }
 
         .id-card-wrapper:hover {
-            transform: translateY(-5px); /* ลูกเล่นเวลาเอาเมาส์ชี้ การ์ดจะลอยขึ้นนิดๆ */
+            transform: translateY(-5px); 
         }
 
-        /* ตัวบัตรสไตล์คลีนๆ */
         .id-card {
             background: #FFFFFF;
             border: 1px solid #EAEAEA;
@@ -119,19 +115,17 @@
             padding: 30px 25px 25px;
             position: relative;
             z-index: 3;
-            /* เงาละมุนๆ โทนน้ำตาลอ่อนให้ดูมีมิติเหมือนวางบนโต๊ะ */
             box-shadow: 0 15px 35px rgba(83, 52, 34, 0.08), 0 5px 15px rgba(0,0,0,0.03); 
             background-image: linear-gradient(to bottom, #FCFAFA 0%, #FFFFFF 15%);
         }
 
-        /* รูเจาะบัตรแบบแคปซูลเรียบหรู (ให้ดูเหมือนตั๋วหรือป้ายแท็ก) */
         .id-hole {
             width: 50px; 
             height: 8px;
-            background-color: var(--bg-color); /* สีเนียนทะลุไปกับพื้นหลัง */
+            background-color: var(--bg-color); 
             border-radius: 10px;
             margin: -10px auto 25px; 
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); /* เพิ่มมิติความลึกให้รูเจาะ */
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); 
         }
 
         .id-name { 
@@ -149,7 +143,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* กรอบรูปภาพในการ์ด */
         .id-photo-container {
             width: 180px; 
             height: 180px;
@@ -169,7 +162,6 @@
             border-radius: 8px;
         }
 
-        /* แมวจิ๋วเกาะกรอบรูป */
         .deco-cat {
             position: absolute;
             bottom: -15px; 
@@ -179,7 +171,6 @@
             filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.1));
         }
 
-        /* ข้อความอธิบายด้านล่าง */
         .result-description {
             font-size: 1.05rem;
             line-height: 1.7;
@@ -197,7 +188,7 @@
             font-weight: 600;
             color: var(--text-color);
             margin-bottom: 35px;
-            background: #F4EFE6; /* ไฮไลท์สีพื้นหลังทริคจัดห้องให้เด่นขึ้นนิดนึง */
+            background: #F4EFE6; 
             padding: 15px 20px;
             border-radius: 12px;
             display: inline-block;
@@ -214,7 +205,6 @@
             text-transform: uppercase;
         }
 
-        /* ลายแมวพาสเทลพื้นหลัง (ปรับให้ละมุนขึ้น ไม่แย่งซีนการ์ด) */
         .bg-pattern {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: -1; display: none; overflow: hidden;
@@ -230,7 +220,6 @@
 </head>
 <body>
 
-    <!-- หน้าแรก: กรอกข้อมูล -->
     <div id="intro" class="container active">
         <h2>สร้างโปรไฟล์นักแสดง 🎬🐾</h2>
         <p>ขอทำความรู้จักว่าที่ซุปตาร์ก่อนเริ่มควิซนะ!</p>
@@ -259,7 +248,6 @@
         <button class="primary-btn" onclick="startQuiz()">เริ่มแคสติ้งบทบาทเลย! ✨</button>
     </div>
 
-    <!-- ข้อ 1 -->
     <div id="q1" class="container">
         <h2>1. เวลาคุณกำลังกินข้าว หรือกินขนม <span class="display-cat-name">เจ้านาย</span> จะ...</h2>
         <button class="choice-btn" onclick="nextQuestion(1, 'A')">มานั่งจ้องหน้าจากที่สูง กดดันเงียบๆ</button>
@@ -268,7 +256,6 @@
         <button class="choice-btn" onclick="nextQuestion(1, 'D')">พยายามจะเอามือมาล้วง หรือขโมยไปต่อหน้าต่อตา!</button>
     </div>
 
-    <!-- ข้อ 2 -->
     <div id="q2" class="container">
         <h2>2. เวลาทำของตกแตก หรือทำผิด <span class="display-cat-name">เจ้านาย</span> จะแสดงอาการยังไง?</h2>
         <button class="choice-btn" onclick="nextQuestion(2, 'A')">เชิดใส่ ไม่แคร์ นุดเก็บกวาดไปสิ</button>
@@ -277,7 +264,6 @@
         <button class="choice-btn" onclick="nextQuestion(2, 'D')">วิ่งหนีสุดชีวิต แถมทำของชิ้นอื่นพังเพิ่ม!</button>
     </div>
 
-    <!-- ข้อ 3 -->
     <div id="q3" class="container">
         <h2>3. ถ้ามีกล่องพัสดุมาส่งที่บ้าน...</h2>
         <button class="choice-btn" onclick="nextQuestion(3, 'A')">กระโดดขึ้นไปนั่งทับของข้างใน ประกาศความเป็นเจ้าของ</button>
@@ -286,7 +272,6 @@
         <button class="choice-btn" onclick="nextQuestion(3, 'D')">กัดกล่องกระดาษกระจุยกระจายเต็มบ้าน</button>
     </div>
 
-    <!-- ข้อ 4 -->
     <div id="q4" class="container">
         <h2>4. ท่านอนประจำของ <span class="display-cat-name">เจ้านาย</span> คือ...</h2>
         <button class="choice-btn" onclick="nextQuestion(4, 'A')">เหยียดตัวยาวบนคอนโดแมวสูงๆ</button>
@@ -295,7 +280,6 @@
         <button class="choice-btn" onclick="nextQuestion(4, 'D')">นอนหงายโชว์พุงกลางทางเดินแบบขวางโลก</button>
     </div>
 
-    <!-- หน้าคั่น (The Bridge) -->
     <div id="bridge" class="container">
         <h2>🎉 แคสติ้งเสร็จเรียบร้อย! 🎬</h2>
         <p>ก่อนไปดูว่า <span class="display-cat-name">เจ้านาย</span> ได้รับบทเป็นใคร... <br>แวะสแกน QR Code เข้า OpenChat <strong>[ชื่อกลุ่ม]</strong> ก่อนได้นะ!</p>
@@ -305,10 +289,8 @@
         <button class="primary-btn" onclick="showResult()">เปิดบทนักแสดงของฉันเลย ✨</button>
     </div>
 
-    <!-- หน้าผลลัพธ์ (ดีไซน์ใหม่) -->
     <div id="result" class="container">
         
-        <!-- ลวดลายพื้นหลัง -->
         <div class="bg-pattern">
             <div class="cat-shape green">🐱</div>
             <div class="cat-shape pink">🐱</div>
@@ -316,27 +298,19 @@
             <div class="cat-shape pink2">🐱</div>
         </div>
 
-        <!-- บัตร ID Card -->
         <div class="id-card-wrapper">
-            <div class="lanyard-left"></div>
-            <div class="lanyard-right"></div>
-            <div class="lanyard-clip"></div>
-            
             <div class="id-card">
                 <div class="id-hole"></div>
                 <div class="id-name"><span id="res-name">เจ้านาย</span> is......</div>
                 <div class="id-role" id="res-title">บทบาท</div>
                 
                 <div class="id-photo-container">
-                    <!-- รูปที่อัปโหลดจะมาแสดงตรงนี้ -->
                     <img id="res-photo" class="id-photo" src="https://via.placeholder.com/160x160?text=No+Image" alt="Cat Photo">
-                    <!-- แมวเกาะขอบ -->
                     <div class="deco-cat">🐈</div>
                 </div>
             </div>
         </div>
 
-        <!-- ข้อความอธิบายด้านล่าง -->
         <div class="result-description" id="res-desc">
             คำอธิบายบุคลิกตัวละคร
         </div>
@@ -346,7 +320,7 @@
         </div>
 
         <div class="footer-credit">
-            created by [ชื่อทีมของคุณ] for line openchat
+            created by [ชื่อทีม] for line openchat
         </div>
 
         <a href="#" class="primary-btn" style="width: 80%; margin: 0 auto; display: block;" target="_blank">จอย OpenChat คลิก!</a>
@@ -358,10 +332,9 @@
             name: "เจ้านาย",
             age: "",
             food: "",
-            imageDataUrl: "" // เก็บข้อมูลรูปภาพ
+            imageDataUrl: "" 
         };
 
-        // ฟังก์ชันอ่านไฟล์รูปภาพที่อัปโหลด
         function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -381,7 +354,6 @@
             catProfile.age = document.getElementById('catAge').value;
             catProfile.food = document.getElementById('catFood').value;
 
-            // นำรูปไปใส่รอไว้ในบัตร ID Card เลย
             if(catProfile.imageDataUrl) {
                 document.getElementById('res-photo').src = catProfile.imageDataUrl;
             }
@@ -404,7 +376,6 @@
                 nextElement.classList.add('active');
             } else {
                 document.getElementById('bridge').classList.add('active');
-                // บันทึกข้อมูล
                 localStorage.setItem('CatSeriesQuizData', JSON.stringify({ catInfo: catProfile, quizAnswers: userAnswers }));
             }
         }
