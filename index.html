@@ -68,14 +68,32 @@
         }
         .input-field:focus { outline: none; border-color: var(--primary-btn); }
 
+        /* แถบเลื่อนน้ำหนัก (Slider) */
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--primary-btn);
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
         .file-upload {
             border: 2px dashed var(--input-border); padding: 20px; text-align: center;
             border-radius: 12px; cursor: pointer; margin-bottom: 20px; transition: border-color 0.3s; display: block;
+            position: relative;
         }
         .file-upload:hover { border-color: var(--primary-btn); }
         .file-upload input[type="file"] { display: none; }
         
-        .upload-success { color: #4CAF50; font-weight: 600; display: none; margin-top: 10px; font-size: 0.9rem;}
+        .preview-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            display: none;
+            margin-top: 10px;
+        }
+        
+        .upload-success { color: #8F7B61; font-weight: 400; display: none; margin-top: 10px; font-size: 0.9rem; text-decoration: underline;}
 
         .choice-btn {
             display: block; width: 100%; background-color: var(--bg-color); color: var(--text-color);
@@ -220,6 +238,7 @@
 </head>
 <body>
 
+    <!-- หน้าแรก: กรอกข้อมูล -->
     <div id="intro" class="container active">
         <h2>สร้างโปรไฟล์นักแสดง 🎬🐾</h2>
         <p>ขอทำความรู้จักว่าที่ซุปตาร์ก่อนเริ่มควิซนะ!</p>
@@ -227,7 +246,9 @@
         <label class="file-upload">
             <input type="file" accept="image/*" id="catPhoto" onchange="previewImage(event)">
             <span id="uploadText">📸 กดเพื่ออัปโหลดรูปเจ้านาย</span>
-            <div id="uploadSuccess" class="upload-success">อัปโหลดรูปสำเร็จ! ✓</div>
+            <!-- พรีวิวรูปภาพ -->
+            <img id="imagePreview" class="preview-image" src="" alt="Preview">
+            <div id="uploadSuccess" class="upload-success">แตะที่รูปเพื่อเปลี่ยนรูปใหม่</div>
         </label>
 
         <div class="input-group">
@@ -237,7 +258,17 @@
 
         <div class="input-group">
             <label>อายุ (ปี/เดือน)</label>
-            <input type="text" id="catAge" class="input-field" placeholder="เช่น 2 ปี">
+            <input type="text" id="catAge" class="input-field" placeholder="เช่น 2 ปี 3 เดือน">
+        </div>
+
+        <div class="input-group">
+            <label>สายพันธุ์</label>
+            <input type="text" id="catBreed" class="input-field" placeholder="เช่น สลิด, เปอร์เซีย, แมวจร">
+        </div>
+
+        <div class="input-group">
+            <label>น้ำหนัก: <span id="weightDisplay">4.0</span> กก.</label>
+            <input type="range" id="catWeight" min="0.5" max="15.0" step="0.1" value="4.0" oninput="updateWeightDisplay(this.value)">
         </div>
 
         <div class="input-group">
@@ -248,6 +279,7 @@
         <button class="primary-btn" onclick="startQuiz()">เริ่มแคสติ้งบทบาทเลย! ✨</button>
     </div>
 
+    <!-- ข้อ 1 -->
     <div id="q1" class="container">
         <h2>1. เวลาคุณกำลังกินข้าว หรือกินขนม <span class="display-cat-name">เจ้านาย</span> จะ...</h2>
         <button class="choice-btn" onclick="nextQuestion(1, 'A')">มานั่งจ้องหน้าจากที่สูง กดดันเงียบๆ</button>
@@ -256,6 +288,7 @@
         <button class="choice-btn" onclick="nextQuestion(1, 'D')">พยายามจะเอามือมาล้วง หรือขโมยไปต่อหน้าต่อตา!</button>
     </div>
 
+    <!-- ข้อ 2 -->
     <div id="q2" class="container">
         <h2>2. เวลาทำของตกแตก หรือทำผิด <span class="display-cat-name">เจ้านาย</span> จะแสดงอาการยังไง?</h2>
         <button class="choice-btn" onclick="nextQuestion(2, 'A')">เชิดใส่ ไม่แคร์ นุดเก็บกวาดไปสิ</button>
@@ -264,6 +297,7 @@
         <button class="choice-btn" onclick="nextQuestion(2, 'D')">วิ่งหนีสุดชีวิต แถมทำของชิ้นอื่นพังเพิ่ม!</button>
     </div>
 
+    <!-- ข้อ 3 -->
     <div id="q3" class="container">
         <h2>3. ถ้ามีกล่องพัสดุมาส่งที่บ้าน...</h2>
         <button class="choice-btn" onclick="nextQuestion(3, 'A')">กระโดดขึ้นไปนั่งทับของข้างใน ประกาศความเป็นเจ้าของ</button>
@@ -272,6 +306,7 @@
         <button class="choice-btn" onclick="nextQuestion(3, 'D')">กัดกล่องกระดาษกระจุยกระจายเต็มบ้าน</button>
     </div>
 
+    <!-- ข้อ 4 -->
     <div id="q4" class="container">
         <h2>4. ท่านอนประจำของ <span class="display-cat-name">เจ้านาย</span> คือ...</h2>
         <button class="choice-btn" onclick="nextQuestion(4, 'A')">เหยียดตัวยาวบนคอนโดแมวสูงๆ</button>
@@ -280,6 +315,7 @@
         <button class="choice-btn" onclick="nextQuestion(4, 'D')">นอนหงายโชว์พุงกลางทางเดินแบบขวางโลก</button>
     </div>
 
+    <!-- หน้าคั่น (The Bridge) -->
     <div id="bridge" class="container">
         <h2>🎉 แคสติ้งเสร็จเรียบร้อย! 🎬</h2>
         <p>ก่อนไปดูว่า <span class="display-cat-name">เจ้านาย</span> ได้รับบทเป็นใคร... <br>แวะสแกน QR Code เข้า OpenChat <strong>[ชื่อกลุ่ม]</strong> ก่อนได้นะ!</p>
@@ -289,6 +325,7 @@
         <button class="primary-btn" onclick="showResult()">เปิดบทนักแสดงของฉันเลย ✨</button>
     </div>
 
+    <!-- หน้าผลลัพธ์ (Minimalist Photocard) -->
     <div id="result" class="container">
         
         <div class="bg-pattern">
@@ -331,18 +368,28 @@
         let catProfile = {
             name: "เจ้านาย",
             age: "",
+            breed: "",
+            weight: "",
             food: "",
             imageDataUrl: "" 
         };
 
+        // ฟังก์ชันอัปเดตตัวเลขเมื่อเลื่อนแถบน้ำหนัก
+        function updateWeightDisplay(val) {
+            document.getElementById('weightDisplay').innerText = val;
+        }
+
+        // ฟังก์ชันแสดงพรีวิวรูป
         function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     catProfile.imageDataUrl = e.target.result;
-                    document.getElementById('uploadSuccess').style.display = 'block';
+                    document.getElementById('imagePreview').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
                     document.getElementById('uploadText').style.display = 'none';
+                    document.getElementById('uploadSuccess').style.display = 'block';
                 }
                 reader.readAsDataURL(file);
             }
@@ -352,6 +399,8 @@
             let nameInput = document.getElementById('catName').value;
             catProfile.name = nameInput || "เจ้านาย";
             catProfile.age = document.getElementById('catAge').value;
+            catProfile.breed = document.getElementById('catBreed').value;
+            catProfile.weight = document.getElementById('catWeight').value;
             catProfile.food = document.getElementById('catFood').value;
 
             if(catProfile.imageDataUrl) {
