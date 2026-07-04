@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ถ้าเจ้านายหลุดเข้าไปในซีรีส์ จะได้รับบทเป็นใคร?</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- เพิ่มไลบรารีสำหรับเซฟ HTML เป็นรูปภาพ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
@@ -73,7 +72,7 @@
 
         /* จัด Layout ให้ Dropdown อายุ */
         .age-container { display: flex; gap: 10px; }
-        .age-container select { cursor: pointer; }
+        .age-container select { cursor: pointer; appearance: auto; }
 
         /* แถบเลื่อนน้ำหนัก (Slider) */
         input[type="range"] {
@@ -119,7 +118,7 @@
         .secondary-btn {
             background-color: #FFF; color: var(--text-color); border: 2px solid var(--text-color); padding: 13px 30px;
             border-radius: 12px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.3s;
-            width: 100%; margin-top: 10px; font-family: 'Prompt', sans-serif; display: inline-block; box-sizing: border-box; text-align: center;
+            width: 100%; margin-bottom: 15px; font-family: 'Prompt', sans-serif; display: inline-block; box-sizing: border-box; text-align: center;
         }
         .secondary-btn:hover { background-color: var(--text-color); color: #FFF; }
 
@@ -208,7 +207,6 @@
 </head>
 <body>
 
-    <!-- หน้าแรก: กรอกข้อมูล -->
     <div id="intro" class="container active">
         <h2>สร้างโปรไฟล์นักแสดง 🎬🐾</h2>
         <p>ขอทำความรู้จักว่าที่ซุปตาร์ก่อนเริ่มควิซนะ!</p>
@@ -221,15 +219,15 @@
         </label>
 
         <div class="input-group">
-            <label>ชื่อเจ้านาย</label>
+            <label>ชื่อเจ้านาย *</label>
             <input type="text" id="catName" class="input-field" placeholder="เช่น น้อนส้ม, ถุงเงิน">
         </div>
 
         <div class="input-group">
-            <label>อายุเจ้านาย</label>
+            <label>อายุเจ้านาย *</label>
             <div class="age-container">
-                <!-- Dropdown ปี -->
                 <select id="catAgeYear" class="input-field">
+                    <option value="" disabled selected>เลือกปี</option>
                     <option value="0">0 ปี</option>
                     <option value="1">1 ปี</option>
                     <option value="2">2 ปี</option>
@@ -245,8 +243,8 @@
                     <option value="12">12 ปี</option>
                     <option value="13">13+ ปี</option>
                 </select>
-                <!-- Dropdown เดือน -->
                 <select id="catAgeMonth" class="input-field">
+                    <option value="" disabled selected>เลือกเดือน</option>
                     <option value="0">0 เดือน</option>
                     <option value="1">1 เดือน</option>
                     <option value="2">2 เดือน</option>
@@ -264,7 +262,7 @@
         </div>
 
         <div class="input-group">
-            <label>สายพันธุ์</label>
+            <label>สายพันธุ์ *</label>
             <input type="text" id="catBreed" class="input-field" placeholder="เช่น สลิด, เปอร์เซีย, แมวจร">
         </div>
 
@@ -274,14 +272,13 @@
         </div>
 
         <div class="input-group">
-            <label>อาหารที่กินประจำตอนนี้</label>
+            <label>อาหารที่กินประจำตอนนี้ *</label>
             <input type="text" id="catFood" class="input-field" placeholder="ยี่ห้อ หรือ สูตรอาหาร">
         </div>
 
         <button class="primary-btn" onclick="startQuiz()">เริ่มแคสติ้งบทบาทเลย! ✨</button>
     </div>
 
-    <!-- ข้อ 1 -->
     <div id="q1" class="container">
         <h2>1. เวลาคุณกำลังกินข้าว หรือกินขนม <span class="display-cat-name">เจ้านาย</span> จะ...</h2>
         <button class="choice-btn" onclick="nextQuestion(1, 'A')">มานั่งจ้องหน้าจากที่สูง กดดันเงียบๆ</button>
@@ -290,7 +287,6 @@
         <button class="choice-btn" onclick="nextQuestion(1, 'D')">พยายามจะเอามือมาล้วง หรือขโมยไปต่อหน้าต่อตา!</button>
     </div>
 
-    <!-- ข้อ 2 -->
     <div id="q2" class="container">
         <h2>2. เวลาทำของตกแตก หรือทำผิด <span class="display-cat-name">เจ้านาย</span> จะแสดงอาการยังไง?</h2>
         <button class="choice-btn" onclick="nextQuestion(2, 'A')">เชิดใส่ ไม่แคร์ นุดเก็บกวาดไปสิ</button>
@@ -299,7 +295,6 @@
         <button class="choice-btn" onclick="nextQuestion(2, 'D')">วิ่งหนีสุดชีวิต แถมทำของชิ้นอื่นพังเพิ่ม!</button>
     </div>
 
-    <!-- ข้อ 3 -->
     <div id="q3" class="container">
         <h2>3. ถ้ามีกล่องพัสดุมาส่งที่บ้าน...</h2>
         <button class="choice-btn" onclick="nextQuestion(3, 'A')">กระโดดขึ้นไปนั่งทับของข้างใน ประกาศความเป็นเจ้าของ</button>
@@ -308,7 +303,6 @@
         <button class="choice-btn" onclick="nextQuestion(3, 'D')">กัดกล่องกระดาษกระจุยกระจายเต็มบ้าน</button>
     </div>
 
-    <!-- ข้อ 4 -->
     <div id="q4" class="container">
         <h2>4. ท่านอนประจำของ <span class="display-cat-name">เจ้านาย</span> คือ...</h2>
         <button class="choice-btn" onclick="nextQuestion(4, 'A')">เหยียดตัวยาวบนคอนโดแมวสูงๆ</button>
@@ -317,7 +311,6 @@
         <button class="choice-btn" onclick="nextQuestion(4, 'D')">นอนหงายโชว์พุงกลางทางเดินแบบขวางโลก</button>
     </div>
 
-    <!-- หน้าคั่น (The Bridge) -->
     <div id="bridge" class="container">
         <h2>🎉 แคสติ้งเสร็จเรียบร้อย! 🎬</h2>
         <p>ก่อนไปดูว่า <span class="display-cat-name">เจ้านาย</span> ได้รับบทเป็นใคร... <br>แวะสแกน QR Code เข้า OpenChat <strong>[ชื่อกลุ่ม]</strong> ก่อนได้นะ!</p>
@@ -327,7 +320,6 @@
         <button class="primary-btn" onclick="showResult()">เปิดบทนักแสดงของฉันเลย ✨</button>
     </div>
 
-    <!-- หน้าผลลัพธ์ (Minimalist Photocard) -->
     <div id="result" class="container">
         
         <div class="bg-pattern">
@@ -337,7 +329,6 @@
             <div class="cat-shape pink2">🐱</div>
         </div>
 
-        <!-- กล่องนี้แหละที่ระบบจะแคปไปทำเป็นรูปภาพ -->
         <div class="id-card-wrapper" id="captureCard">
             <div class="id-card">
                 <div class="id-hole"></div>
@@ -353,11 +344,11 @@
 
         <div class="result-description" id="res-desc">คำอธิบายบุคลิกตัวละคร</div>
         <div class="result-tips">วิธีการเอาใจ: <span id="res-tips">ทริคจัดห้อง</span></div>
-        <div class="footer-credit">created by [ชื่อทีม] for line openchat</div>
-
-        <!-- ปุ่ม Action -->
+        
         <button class="secondary-btn" onclick="downloadImage()">📸 บันทึกรูปลงเครื่อง</button>
         <a href="#" class="primary-btn" target="_blank">จอย OpenChat คลิก!</a>
+
+        <div class="footer-credit" style="margin-top: 25px;">created by [ชื่อทีม] for line openchat</div>
     </div>
 
     <script>
@@ -384,21 +375,32 @@
         }
 
         function startQuiz() {
-            let nameInput = document.getElementById('catName').value;
-            catProfile.name = nameInput || "เจ้านาย";
+            // ระบบตรวจสอบการกรอกข้อมูล (Validation)
+            let nameInput = document.getElementById('catName').value.trim();
+            let breedInput = document.getElementById('catBreed').value.trim();
+            let foodInput = document.getElementById('catFood').value.trim();
+            let yearSelect = document.getElementById('catAgeYear').value;
+            let monthSelect = document.getElementById('catAgeMonth').value;
+
+            // เช็คว่าถ้าช่องไหนว่าง หรือยังไม่อัปรูป ให้เด้งแจ้งเตือน
+            if (!catProfile.imageDataUrl || nameInput === "" || breedInput === "" || foodInput === "" || yearSelect === "" || monthSelect === "") {
+                alert("แง้ว! 🐾 กรุณาอัปโหลดรูปและกรอกข้อมูลเจ้านายให้ครบทุกช่องก่อนเริ่มควิซนะฮะ");
+                return; // หยุดการทำงาน ไม่ยอมให้ไปหน้าถัดไป
+            }
+
+            // ถ้าระบุครบ ให้เก็บข้อมูล
+            catProfile.name = nameInput;
             
             // นำค่าปีและเดือนมารวมกัน
-            let year = document.getElementById('catAgeYear').value;
-            let month = document.getElementById('catAgeMonth').value;
             let ageString = "";
-            if(year > 0) ageString += year + " ปี ";
-            if(month > 0) ageString += month + " เดือน";
-            if(year == 0 && month == 0) ageString = "ไม่ระบุ";
+            if(yearSelect > 0) ageString += yearSelect + " ปี ";
+            if(monthSelect > 0) ageString += monthSelect + " เดือน";
+            if(yearSelect == 0 && monthSelect == 0) ageString = "ไม่ถึง 1 เดือน";
             
             catProfile.age = ageString.trim();
-            catProfile.breed = document.getElementById('catBreed').value;
+            catProfile.breed = breedInput;
             catProfile.weight = document.getElementById('catWeight').value;
-            catProfile.food = document.getElementById('catFood').value;
+            catProfile.food = foodInput;
 
             if(catProfile.imageDataUrl) {
                 document.getElementById('res-photo').src = catProfile.imageDataUrl;
@@ -432,7 +434,7 @@
                 };
 
                 // 🔴 อย่าลืมเอา URL ของ Google Sheets มาใส่ตรงนี้นะครับ 🔴
-                const scriptURL = 'https://script.google.com/macros/s/AKfycbx2BV0NXpelcwUSiqzLuwOsBpJ4x5o6y3tdqwo3Qu21ZfxeXSQUiq81dETEatQoli-s/exec
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbx2BV0NXpelcwUSiqzLuwOsBpJ4x5o6y3tdqwo3Qu21ZfxeXSQUiq81dETEatQoli-s/exec';
 
                 fetch(scriptURL, {
                     method: 'POST',
@@ -483,15 +485,20 @@
         // ฟังก์ชันสำหรับบันทึกการ์ดเป็นรูปภาพ
         function downloadImage() {
             const card = document.getElementById('captureCard');
-            // ใช้ html2canvas แคปเจอร์เฉพาะตัวการ์ดผลลัพธ์
+            // ซ่อนเงาชั่วคราวก่อนแคป เพื่อป้องกันขอบดำตอนแปลงเป็นภาพ
+            card.style.boxShadow = 'none'; 
+            
             html2canvas(card, {
-                backgroundColor: null, // พื้นหลังใส
+                backgroundColor: null, 
                 scale: 2 // เพิ่มความคมชัด
             }).then(canvas => {
                 let link = document.createElement('a');
-                link.download = catProfile.name + '-result.png'; // ตั้งชื่อไฟล์เป็นชื่อแมว
+                link.download = catProfile.name + '-result.png'; 
                 link.href = canvas.toDataURL('image/png');
                 link.click();
+                
+                // คืนค่าเงากลับมาเหมือนเดิม
+                card.style.boxShadow = '';
             });
         }
     </script>
