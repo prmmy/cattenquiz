@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เจ้านายที่บ้านคุณเป็นแมวไทป์ไหน?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F9F6F0; 
+            --text-color: #4A3F35; 
+            --primary-btn: #C2A878; 
+            --primary-btn-hover: #A68A64;
+            --card-bg: #FFFFFF;
+            --input-border: #E0D8C3;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            max-width: 500px;
+            width: 100%;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            text-align: center;
+            display: none; 
+            box-sizing: border-box;
+        }
+
+        .active {
+            display: block; 
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 { font-weight: 600; margin-bottom: 20px; font-size: 1.4rem; line-height: 1.5; }
+        p { font-weight: 300; margin-bottom: 30px; line-height: 1.6; }
+
+        /* สไตล์สำหรับช่องกรอกข้อมูล */
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 400;
+            font-size: 0.95rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--input-border);
+            border-radius: 12px;
+            font-family: 'Prompt', sans-serif;
+            font-size: 1rem;
+            color: var(--text-color);
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-btn);
+        }
+
+        .file-upload {
+            border: 2px dashed var(--input-border);
+            padding: 20px;
+            text-align: center;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+
+        .file-upload:hover { border-color: var(--primary-btn); }
+        .file-upload input[type="file"] { display: none; }
+
+        .choice-btn {
+            display: block;
+            width: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 2px solid transparent;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Prompt', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .choice-btn:hover {
+            border-color: var(--primary-btn);
+            background-color: #FFF;
+        }
+
+        .primary-btn {
+            background-color: var(--primary-btn);
+            color: #FFF;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+            margin-top: 10px;
+            font-family: 'Prompt', sans-serif;
+            text-decoration: none;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+
+        .primary-btn:hover { background-color: var(--primary-btn-hover); }
+
+        .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            background-color: #EEE;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            color: #999;
+            border: 2px dashed #CCC;
+        }
+        
+        .result-box { text-align: left; background: var(--bg-color); padding: 20px; border-radius: 15px; margin-bottom: 20px;}
+    </style>
+</head>
+<body>
+
+    <!-- หน้าแรก: กรอกข้อมูลเจ้านาย (Intro Step) -->
+    <div id="intro" class="container active">
+        <h2>สร้างโปรไฟล์เจ้านาย 🐾</h2>
+        <p>ขอทำความรู้จักเจ้านายของคุณก่อนเริ่มควิซนะ!</p>
+        
+        <label class="file-upload">
+            <input type="file" accept="image/*" id="catPhoto">
+            📸 กดเพื่ออัปโหลดรูปเจ้านาย
+        </label>
+
+        <div class="input-group">
+            <label>ชื่อเจ้านาย</label>
+            <input type="text" id="catName" class="input-field" placeholder="เช่น น้อนส้ม, ถุงเงิน">
+        </div>
+
+        <div class="input-group">
+            <label>อายุ (ปี/เดือน)</label>
+            <input type="text" id="catAge" class="input-field" placeholder="เช่น 2 ปี">
+        </div>
+
+        <div class="input-group">
+            <label>อาหารที่กินประจำตอนนี้</label>
+            <input type="text" id="catFood" class="input-field" placeholder="ยี่ห้อ หรือ สูตรอาหาร">
+        </div>
+
+        <button class="primary-btn" onclick="startQuiz()">เริ่มทำควิซเลย! ✨</button>
+    </div>
+
+    <!-- หน้าเริ่มควิซ (Question 1) -->
+    <div id="q1" class="container">
+        <h2>1. มุมโปรดในบ้านที่ <span class="display-cat-name">เจ้านาย</span> ชอบนอนที่สุดคือ...</h2>
+        <button class="choice-btn" onclick="nextQuestion(1, 'A')">กลางที่นอนนุดเลย (สายอ้อนตัวยง)</button>
+        <button class="choice-btn" onclick="nextQuestion(1, 'B')">ชั้นวางของสูงๆ หรือบนตู้ (สายสังเกตการณ์)</button>
+        <button class="choice-btn" onclick="nextQuestion(1, 'C')">ในกล่องกระดาษหรือใต้โต๊ะ (สายรักสันโดษ)</button>
+        <button class="choice-btn" onclick="nextQuestion(1, 'D')">หน้าต่าง/ประตู ดูความเคลื่อนไหว (สายชอบผจญภัย)</button>
+    </div>
+
+    <!-- หน้าคำถามที่ 2 -->
+    <div id="q2" class="container">
+        <h2>2. เวลาเห็นนกหรือแมลงนอกหน้าต่าง พฤติกรรมคือ...</h2>
+        <button class="choice-btn" onclick="nextQuestion(2, 'A')">ร้องเรียกนุดให้มาดูด้วย (สายแชร์ความสุข)</button>
+        <button class="choice-btn" onclick="nextQuestion(2, 'B')">จ้องเขม็งแบบไม่ยอมละสายตา (สายจริงจัง)</button>
+        <button class="choice-btn" onclick="nextQuestion(2, 'C')">ทำเสียง 'จั๊กๆ' ในลำคอ (สายนักล่า)</button>
+        <button class="choice-btn" onclick="nextQuestion(2, 'D')">เฉยๆ แค่มองผ่านๆ (สายปลง)</button>
+    </div>
+
+    <!-- หน้าคั่น (The Bridge) -->
+    <div id="bridge" class="container">
+        <h2>🎉 ประมวลผลเสร็จแล้ว! 🐾</h2>
+        <p>ก่อนไปดูว่า <span class="display-cat-name">เจ้านาย</span> เป็นไทป์ไหน... <br>แวะมาสแกน QR Code เข้า OpenChat <strong>[ชื่อกลุ่ม]</strong> ก่อนได้นะ! มีทริคจัดห้องเพียบ✨</p>
+        
+        <div class="qr-placeholder">ใส่รูป QR Code ตรงนี้</div> 
+        
+        <button class="primary-btn" onclick="showResult()">ดูผลทำนายของฉันเลย ✨</button>
+    </div>
+
+    <!-- หน้าผลลัพธ์ (The Result) -->
+    <div id="result" class="container">
+        <h2 id="result-title">เจ้านายของคุณคือ...</h2>
+        
+        <div class="result-box">
+            <p id="result-desc">ประมวลผล...</p>
+            <strong>💡 ทริคจัดห้อง:</strong>
+            <p id="result-tips">...</p>
+        </div>
+
+        <p>แคปไปอวดเพื่อนๆ ทาสแมวในกลุ่มกันเถอะ!</p>
+        <a href="#" class="primary-btn" target="_blank">เข้าร่วม OpenChat คลิก!</a>
+    </div>
+
+    <script>
+        let userAnswers = [];
+        let catProfile = {};
+
+        // ฟังก์ชันเก็บข้อมูลหน้าแรกก่อนเริ่มควิซ
+        function startQuiz() {
+            let nameInput = document.getElementById('catName').value;
+            catProfile = {
+                name: nameInput || "เจ้านาย", // ถ้าไม่กรอกชื่อ จะใช้คำว่า "เจ้านาย" แทน
+                age: document.getElementById('catAge').value,
+                food: document.getElementById('catFood').value
+            };
+
+            // อัปเดตชื่อแมวในคำถามให้ดูน่ารักและใส่ใจขึ้น
+            let nameDisplays = document.querySelectorAll('.display-cat-name');
+            nameDisplays.forEach(el => {
+                el.innerText = catProfile.name;
+            });
+
+            document.getElementById('intro').classList.remove('active');
+            document.getElementById('q1').classList.add('active');
+        }
+
+        function nextQuestion(currentQ, answer) {
+            userAnswers.push(answer);
+            
+            document.getElementById('q' + currentQ).classList.remove('active');
+            
+            let nextQ = currentQ + 1;
+            let nextElement = document.getElementById('q' + nextQ);
+            
+            if (nextElement) {
+                nextElement.classList.add('active');
+            } else {
+                document.getElementById('bridge').classList.add('active');
+                saveDataToServer(userAnswers, catProfile);
+            }
+        }
+
+        function showResult() {
+            document.getElementById('bridge').classList.remove('active');
+            document.getElementById('result').classList.add('active');
+            
+            let modeAnswer = calculateMode(userAnswers);
+            displayResultContent(modeAnswer);
+        }
+
+        function calculateMode(arr) {
+            return arr.sort((a,b) => arr.filter(v => v===a).length - arr.filter(v => v===b).length).pop();
+        }
+
+        function displayResultContent(type) {
+            const title = document.getElementById('result-title');
+            const desc = document.getElementById('result-desc');
+            const tips = document.getElementById('result-tips');
+            const catName = catProfile.name;
+
+            if (type === 'A') {
+                title.innerText = catName + " เป็นสายอ้อน ตัวติดหนึบ! 🧡";
+                desc.innerText = "นุดไปไหน ข้าไปด้วย! เป็นแมวที่ต้องการความรักและการมีส่วนร่วมสูงมาก";
+                tips.innerText = "เพิ่มเบาะนอนนุ่มๆ หรือเปลติดกระจกไว้ใกล้ๆ โต๊ะทำงานของคุณ การใช้เฟอร์นิเจอร์สีไม้สว่างจะช่วยให้ห้องดูคลีนและอบอุ่น";
+            } else if (type === 'B') {
+                title.innerText = catName + " เป็นสายสังเกตการณ์ 👀";
+                desc.innerText = "สุขุม นุ่มลึก ชอบประเมินสถานการณ์จากมุมสูง แอบมองนุดอยู่ห่างๆ อย่างห่วงๆ";
+                tips.innerText = "ควรทำชั้นลอยติดผนัง (Cat Step) ให้เขาได้ปีนป่ายขึ้นไปมองวิวรอบห้อง";
+            } else if (type === 'C') {
+                title.innerText = catName + " เป็นสายซุ่ม รักความสงบ 📦";
+                desc.innerText = "ขี้อาย รักความสงบ ชอบขดตัวอยู่ในที่แคบๆ มืดๆ เพราะทำให้รู้สึกปลอดภัย";
+                tips.innerText = "หากล่องไม้ดีไซน์คลีนๆ หรือโต๊ะกลางที่มีช่องด้านล่าง มาวางไว้ตามมุมห้องให้เขาได้ซ่อนตัว";
+            } else {
+                title.innerText = catName + " เป็นสายลุย พลังงานล้น 🚀";
+                desc.innerText = "นักสำรวจประจำบ้าน! พลังงานเยอะ ชอบความท้าทาย";
+                tips.innerText = "จัดมุมฝนเล็บที่แข็งแรง และวางของเล่นที่กระตุ้นสัญชาตญาณนักล่าไว้ตามจุดต่างๆ";
+            }
+        }
+
+        function saveDataToServer(answers, profile) {
+            let finalData = {
+                catInfo: profile,
+                quizAnswers: answers
+            };
+            localStorage.setItem('CatQuizData', JSON.stringify(finalData));
+            console.log("บันทึกข้อมูลแล้ว:", finalData);
+        }
+    </script>
+</body>
+</html>
