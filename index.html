@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ถ้าเจ้านายหลุดเข้าไปในซีรีส์ จะได้รับบทเป็นใคร?</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- เพิ่มไลบรารีสำหรับเซฟ HTML เป็นรูปภาพ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
             --bg-color: #FDFBF7; 
@@ -65,8 +67,13 @@
             width: 100%; padding: 12px 15px; border: 2px solid var(--input-border);
             border-radius: 12px; font-family: 'Prompt', sans-serif; font-size: 1rem;
             color: var(--text-color); box-sizing: border-box; transition: border-color 0.3s;
+            background-color: #FFF;
         }
         .input-field:focus { outline: none; border-color: var(--primary-btn); }
+
+        /* จัด Layout ให้ Dropdown อายุ */
+        .age-container { display: flex; gap: 10px; }
+        .age-container select { cursor: pointer; }
 
         /* แถบเลื่อนน้ำหนัก (Slider) */
         input[type="range"] {
@@ -105,9 +112,16 @@
         .primary-btn {
             background-color: var(--text-color); color: #FFF; border: none; padding: 15px 30px;
             border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: background 0.3s;
-            width: 100%; margin-top: 10px; font-family: 'Prompt', sans-serif; text-decoration: none; display: inline-block; box-sizing: border-box;
+            width: 100%; margin-top: 10px; font-family: 'Prompt', sans-serif; text-decoration: none; display: inline-block; box-sizing: border-box; text-align: center;
         }
         .primary-btn:hover { opacity: 0.9; }
+
+        .secondary-btn {
+            background-color: #FFF; color: var(--text-color); border: 2px solid var(--text-color); padding: 13px 30px;
+            border-radius: 12px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: all 0.3s;
+            width: 100%; margin-top: 10px; font-family: 'Prompt', sans-serif; display: inline-block; box-sizing: border-box; text-align: center;
+        }
+        .secondary-btn:hover { background-color: var(--text-color); color: #FFF; }
 
         .qr-placeholder {
             width: 200px; height: 200px; background-color: #EEE; margin: 0 auto 20px; display: flex;
@@ -121,10 +135,7 @@
             width: 280px;
             transition: transform 0.3s ease;
         }
-
-        .id-card-wrapper:hover {
-            transform: translateY(-5px); 
-        }
+        .id-card-wrapper:hover { transform: translateY(-5px); }
 
         .id-card {
             background: #FFFFFF;
@@ -146,81 +157,40 @@
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); 
         }
 
-        .id-name { 
-            font-size: 1.1rem; 
-            margin-bottom: 5px; 
-            color: var(--text-color); 
-            font-weight: 300;
-        }
-        
-        .id-role { 
-            font-size: 1.5rem; 
-            font-weight: 600; 
-            margin-bottom: 25px; 
-            color: var(--text-color); 
-            letter-spacing: 0.5px;
-        }
+        .id-name { font-size: 1.1rem; margin-bottom: 5px; color: var(--text-color); font-weight: 300; }
+        .id-role { font-size: 1.5rem; font-weight: 600; margin-bottom: 25px; color: var(--text-color); letter-spacing: 0.5px; }
 
         .id-photo-container {
-            width: 180px; 
-            height: 180px;
-            margin: 0 auto;
-            border: 4px solid #FDFBF7;
-            background-color: #FAFAFA;
-            position: relative;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            overflow: visible; 
+            width: 180px; height: 180px; margin: 0 auto;
+            border: 4px solid #FDFBF7; background-color: #FAFAFA;
+            position: relative; border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: visible; 
         }
 
-        .id-photo {
-            width: 100%; 
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px;
-        }
+        .id-photo { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
 
         .deco-cat {
-            position: absolute;
-            bottom: -15px; 
-            right: -20px;
-            font-size: 45px; 
-            transform: rotate(-10deg);
+            position: absolute; bottom: -15px; right: -20px;
+            font-size: 45px; transform: rotate(-10deg);
             filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.1));
         }
 
         .result-description {
-            font-size: 1.05rem;
-            line-height: 1.7;
-            margin: 0 auto 25px;
-            max-width: 320px;
-            color: var(--text-color);
-            background: #FFFFFF;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(83, 52, 34, 0.05);
+            font-size: 1.05rem; line-height: 1.7; margin: 0 auto 25px;
+            max-width: 320px; color: var(--text-color); background: #FFFFFF;
+            padding: 20px; border-radius: 16px; box-shadow: 0 4px 15px rgba(83, 52, 34, 0.05);
         }
 
         .result-tips {
-            font-size: 1.05rem;
-            font-weight: 600;
-            color: var(--text-color);
-            margin-bottom: 35px;
-            background: #F4EFE6; 
-            padding: 15px 20px;
-            border-radius: 12px;
-            display: inline-block;
+            font-size: 1.05rem; font-weight: 600; color: var(--text-color);
+            margin-bottom: 35px; background: #F4EFE6; 
+            padding: 15px 20px; border-radius: 12px; display: inline-block;
         }
-        
         .result-tips span { font-weight: 400; display: block; margin-top: 5px; }
 
         .footer-credit {
-            font-size: 0.85rem;
-            color: var(--text-color);
-            opacity: 0.6;
-            margin-bottom: 25px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            font-size: 0.85rem; color: var(--text-color); opacity: 0.6;
+            margin-bottom: 25px; letter-spacing: 1px; text-transform: uppercase;
         }
 
         .bg-pattern {
@@ -246,7 +216,6 @@
         <label class="file-upload">
             <input type="file" accept="image/*" id="catPhoto" onchange="previewImage(event)">
             <span id="uploadText">📸 กดเพื่ออัปโหลดรูปเจ้านาย</span>
-            <!-- พรีวิวรูปภาพ -->
             <img id="imagePreview" class="preview-image" src="" alt="Preview">
             <div id="uploadSuccess" class="upload-success">แตะที่รูปเพื่อเปลี่ยนรูปใหม่</div>
         </label>
@@ -257,8 +226,41 @@
         </div>
 
         <div class="input-group">
-            <label>อายุ (ปี/เดือน)</label>
-            <input type="text" id="catAge" class="input-field" placeholder="เช่น 2 ปี 3 เดือน">
+            <label>อายุเจ้านาย</label>
+            <div class="age-container">
+                <!-- Dropdown ปี -->
+                <select id="catAgeYear" class="input-field">
+                    <option value="0">0 ปี</option>
+                    <option value="1">1 ปี</option>
+                    <option value="2">2 ปี</option>
+                    <option value="3">3 ปี</option>
+                    <option value="4">4 ปี</option>
+                    <option value="5">5 ปี</option>
+                    <option value="6">6 ปี</option>
+                    <option value="7">7 ปี</option>
+                    <option value="8">8 ปี</option>
+                    <option value="9">9 ปี</option>
+                    <option value="10">10 ปี</option>
+                    <option value="11">11 ปี</option>
+                    <option value="12">12 ปี</option>
+                    <option value="13">13+ ปี</option>
+                </select>
+                <!-- Dropdown เดือน -->
+                <select id="catAgeMonth" class="input-field">
+                    <option value="0">0 เดือน</option>
+                    <option value="1">1 เดือน</option>
+                    <option value="2">2 เดือน</option>
+                    <option value="3">3 เดือน</option>
+                    <option value="4">4 เดือน</option>
+                    <option value="5">5 เดือน</option>
+                    <option value="6">6 เดือน</option>
+                    <option value="7">7 เดือน</option>
+                    <option value="8">8 เดือน</option>
+                    <option value="9">9 เดือน</option>
+                    <option value="10">10 เดือน</option>
+                    <option value="11">11 เดือน</option>
+                </select>
+            </div>
         </div>
 
         <div class="input-group">
@@ -335,7 +337,8 @@
             <div class="cat-shape pink2">🐱</div>
         </div>
 
-        <div class="id-card-wrapper">
+        <!-- กล่องนี้แหละที่ระบบจะแคปไปทำเป็นรูปภาพ -->
+        <div class="id-card-wrapper" id="captureCard">
             <div class="id-card">
                 <div class="id-hole"></div>
                 <div class="id-name"><span id="res-name">เจ้านาย</span> is......</div>
@@ -348,38 +351,23 @@
             </div>
         </div>
 
-        <div class="result-description" id="res-desc">
-            คำอธิบายบุคลิกตัวละคร
-        </div>
+        <div class="result-description" id="res-desc">คำอธิบายบุคลิกตัวละคร</div>
+        <div class="result-tips">วิธีการเอาใจ: <span id="res-tips">ทริคจัดห้อง</span></div>
+        <div class="footer-credit">created by [ชื่อทีม] for line openchat</div>
 
-        <div class="result-tips">
-            วิธีการเอาใจ: <span id="res-tips">ทริคจัดห้อง</span>
-        </div>
-
-        <div class="footer-credit">
-            created by [ชื่อทีม] for line openchat
-        </div>
-
-        <a href="#" class="primary-btn" style="width: 80%; margin: 0 auto; display: block;" target="_blank">จอย OpenChat คลิก!</a>
+        <!-- ปุ่ม Action -->
+        <button class="secondary-btn" onclick="downloadImage()">📸 บันทึกรูปลงเครื่อง</button>
+        <a href="#" class="primary-btn" target="_blank">จอย OpenChat คลิก!</a>
     </div>
 
     <script>
         let userAnswers = [];
         let catProfile = {
-            name: "เจ้านาย",
-            age: "",
-            breed: "",
-            weight: "",
-            food: "",
-            imageDataUrl: "" 
+            name: "เจ้านาย", age: "", breed: "", weight: "", food: "", imageDataUrl: "" 
         };
 
-        // ฟังก์ชันอัปเดตตัวเลขเมื่อเลื่อนแถบน้ำหนัก
-        function updateWeightDisplay(val) {
-            document.getElementById('weightDisplay').innerText = val;
-        }
+        function updateWeightDisplay(val) { document.getElementById('weightDisplay').innerText = val; }
 
-        // ฟังก์ชันแสดงพรีวิวรูป
         function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -398,7 +386,16 @@
         function startQuiz() {
             let nameInput = document.getElementById('catName').value;
             catProfile.name = nameInput || "เจ้านาย";
-            catProfile.age = document.getElementById('catAge').value;
+            
+            // นำค่าปีและเดือนมารวมกัน
+            let year = document.getElementById('catAgeYear').value;
+            let month = document.getElementById('catAgeMonth').value;
+            let ageString = "";
+            if(year > 0) ageString += year + " ปี ";
+            if(month > 0) ageString += month + " เดือน";
+            if(year == 0 && month == 0) ageString = "ไม่ระบุ";
+            
+            catProfile.age = ageString.trim();
             catProfile.breed = document.getElementById('catBreed').value;
             catProfile.weight = document.getElementById('catWeight').value;
             catProfile.food = document.getElementById('catFood').value;
@@ -414,7 +411,7 @@
             document.getElementById('q1').classList.add('active');
         }
 
-function nextQuestion(currentQ, answer) {
+        function nextQuestion(currentQ, answer) {
             userAnswers.push(answer);
             document.getElementById('q' + currentQ).classList.remove('active');
             
@@ -426,32 +423,23 @@ function nextQuestion(currentQ, answer) {
             } else {
                 document.getElementById('bridge').classList.add('active');
                 
-                // 1. คำนวณผลลัพธ์
                 let modeAnswer = calculateMode(userAnswers);
                 let resultType = modeAnswer === 'A' ? "ท่านประธาน" : modeAnswer === 'B' ? "นางเอก" : modeAnswer === 'C' ? "พระรอง" : "นางร้าย";
 
-                // 2. เตรียมแพ็กเกจข้อมูลส่งเข้า Google Sheets
                 let dataToSave = {
-                    name: catProfile.name,
-                    age: catProfile.age,
-                    breed: catProfile.breed,
-                    weight: catProfile.weight,
-                    food: catProfile.food,
-                    result: resultType
+                    name: catProfile.name, age: catProfile.age, breed: catProfile.breed,
+                    weight: catProfile.weight, food: catProfile.food, result: resultType
                 };
 
-                // 🔴 3. เอา URL ที่ก๊อปมาจาก Google Sheets มาวางแทนข้อความภาษาไทยตรงนี้เลยครับ 🔴
-                const scriptURL = 'https://script.google.com/macros/s/AKfycbx2BV0NXpelcwUSiqzLuwOsBpJ4x5o6y3tdqwo3Qu21ZfxeXSQUiq81dETEatQoli-s/exec';
+                // 🔴 อย่าลืมเอา URL ของ Google Sheets มาใส่ตรงนี้นะครับ 🔴
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbx2BV0NXpelcwUSiqzLuwOsBpJ4x5o6y3tdqwo3Qu21ZfxeXSQUiq81dETEatQoli-s/exec
 
-                // 4. ยิงข้อมูลเข้า Google Sheets
                 fetch(scriptURL, {
                     method: 'POST',
-                    mode: 'no-cors', // ป้องกันการบล็อกข้ามเว็บไซต์
+                    mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dataToSave)
-                })
-                .then(response => console.log('ส่งข้อมูลเข้า Sheets สำเร็จ!'))
-                .catch(error => console.error('Error!', error.message));
+                }).catch(error => console.error('Error!', error.message));
             }
         }
 
@@ -490,6 +478,21 @@ function nextQuestion(currentQ, answer) {
                 desc.innerText = "พลังงานล้นเหลือ วิ่งซนทั่วบ้าน วีรกรรมเยอะ สร้างเรื่องปวดหัวให้ทุกวัน แต่นุดก็หลงรักความแสบซนนี้จนถอนตัวไม่ขึ้น";
                 tips.innerText = "ซื้อคอนโดแมวสูง ๆ ให้ปีนป่ายระบายพลังงาน";
             }
+        }
+
+        // ฟังก์ชันสำหรับบันทึกการ์ดเป็นรูปภาพ
+        function downloadImage() {
+            const card = document.getElementById('captureCard');
+            // ใช้ html2canvas แคปเจอร์เฉพาะตัวการ์ดผลลัพธ์
+            html2canvas(card, {
+                backgroundColor: null, // พื้นหลังใส
+                scale: 2 // เพิ่มความคมชัด
+            }).then(canvas => {
+                let link = document.createElement('a');
+                link.download = catProfile.name + '-result.png'; // ตั้งชื่อไฟล์เป็นชื่อแมว
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
         }
     </script>
 </body>
