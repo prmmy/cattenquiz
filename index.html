@@ -338,7 +338,7 @@
 
     <script>
         let userAnswers = [];
-        let catProfile = { name: "เจ้านาย", age: "", breed: "", weight: "", food: "", imageDataUrl: "" };
+        let catProfile = { name: "เจ้านาย", age: "", breed: "", disease:"", weight: "", food: "", imageDataUrl: "" };
 
         function updateWeightDisplay(val) { document.getElementById('weightDisplay').innerText = val; }
 
@@ -361,6 +361,7 @@
             // เช็คว่ากรอกครบมั้ย
             let nameInput = document.getElementById('catName').value.trim();
             let breedInput = document.getElementById('catBreed').value.trim();
+            let diseaseInput = document.getElementById('catDisease').value.trim() || "-";
             let foodInput = document.getElementById('catFood').value.trim();
             let yearSelect = document.getElementById('catAgeYear').value;
             let monthSelect = document.getElementById('catAgeMonth').value;
@@ -378,6 +379,7 @@
             
             catProfile.age = ageString.trim();
             catProfile.breed = breedInput;
+            catProfile.disease = diseaseInput;
             catProfile.weight = document.getElementById('catWeight').value;
             catProfile.food = foodInput;
 
