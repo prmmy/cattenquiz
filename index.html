@@ -252,6 +252,10 @@
             <label>น้ำหนัก: <span id="weightDisplay">4.0</span> กก.</label>
             <input type="range" id="catWeight" min="0.5" max="15.0" step="0.1" value="4.0" oninput="updateWeightDisplay(this.value)">
         </div>
+        <div class="input-group">
+            <label>โรคประจำตัว <span style="font-weight: 300; opacity: 0.7;">(ถ้าไม่มีให้ใส่ -)</span></label>
+            <input type="text" id="catDisease" class="input-field" placeholder="เช่น ไม่มี, โรคไต, หอบหืด">
+        </div>
 
         <div class="input-group">
             <label>อาหารที่กินประจำตอนนี้ *</label>
