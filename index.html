@@ -99,34 +99,48 @@
             align-items: center; justify-content: center; border-radius: 15px; color: #999; border: 2px dashed #CCC;
         }
 
-        /* --- ดีไซน์บัตร ID Card ตามรูปเรฟเฟอเรนซ์ --- */
+/* --- ดีไซน์บัตร ID Card ตามรูปเรฟเฟอเรนซ์ --- */
         .id-card-wrapper {
             position: relative;
-            margin: 60px auto 30px;
+            margin: 80px auto 30px; /* เพิ่มพื้นที่ด้านบนให้สายคล้อง */
             width: 260px;
         }
 
-        /* สายคล้องคอ */
+        /* สายคล้องคอซ้าย-ขวา */
         .lanyard-left, .lanyard-right {
             position: absolute;
-            width: 14px; height: 120px;
+            width: 14px; height: 130px;
             background-color: var(--text-color);
-            top: -95px; z-index: 1;
+            top: -110px; z-index: 1; /* อยู่หลังบัตร */
         }
-        .lanyard-left { left: 35%; transform: rotate(30deg); }
-        .lanyard-right { right: 35%; transform: rotate(-30deg); }
+        .lanyard-left { 
+            left: 50%; 
+            transform-origin: bottom left; 
+            transform: translateX(-100%) rotate(-32deg); 
+        }
+        .lanyard-right { 
+            right: 50%; 
+            transform-origin: bottom right; 
+            transform: translateX(100%) rotate(32deg); 
+        }
+        
+        /* คลิปสามเหลี่ยมที่เสียบเข้ารู (ชี้ลง) */
         .lanyard-clip {
             position: absolute;
             width: 0; height: 0;
-            border-left: 15px solid transparent; border-right: 15px solid transparent;
-            border-bottom: 25px solid var(--text-color);
-            top: -15px; left: 50%; transform: translateX(-50%); z-index: 2;
+            border-left: 18px solid transparent; 
+            border-right: 18px solid transparent;
+            border-top: 28px solid var(--text-color); /* เปลี่ยนเป็น top เพื่อให้สามเหลี่ยมชี้ลง */
+            top: -5px; /* ขยับลงมาทับขอบบัตร */
+            left: 50%; 
+            transform: translateX(-50%); 
+            z-index: 4; /* อยู่บนบัตร */
         }
 
         /* ตัวบัตร */
         .id-card {
             background: var(--id-card-bg);
-            border: 1px solid var(--text-color);
+            border: 2px solid var(--text-color);
             border-radius: 12px;
             padding: 25px 20px;
             position: relative;
@@ -136,11 +150,12 @@
 
         /* รูเจาะบัตร */
         .id-hole {
-            width: 40px; height: 10px;
-            background-color: var(--bg-color);
-            border: 1px solid var(--text-color);
+            width: 45px; height: 12px;
+            background-color: var(--bg-color); /* สีเนียนไปกับพื้นหลังให้ดูเหมือนเจาะรู */
+            border: 2px solid var(--text-color);
             border-radius: 10px;
-            margin: -10px auto 15px;
+            margin: -12px auto 15px; /* ขยับรูเจาะให้พอดีกับปลายคลิปสามเหลี่ยม */
+            position: relative;
         }
 
         .id-name { font-size: 1.1rem; margin-bottom: 5px; color: var(--text-color); }
