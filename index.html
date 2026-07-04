@@ -414,7 +414,7 @@
             document.getElementById('q1').classList.add('active');
         }
 
-        function nextQuestion(currentQ, answer) {
+function nextQuestion(currentQ, answer) {
             userAnswers.push(answer);
             document.getElementById('q' + currentQ).classList.remove('active');
             
@@ -425,7 +425,33 @@
                 nextElement.classList.add('active');
             } else {
                 document.getElementById('bridge').classList.add('active');
-                localStorage.setItem('CatSeriesQuizData', JSON.stringify({ catInfo: catProfile, quizAnswers: userAnswers }));
+                
+                // 1. คำนวณผลลัพธ์
+                let modeAnswer = calculateMode(userAnswers);
+                let resultType = modeAnswer === 'A' ? "ท่านประธาน" : modeAnswer === 'B' ? "นางเอก" : modeAnswer === 'C' ? "พระรอง" : "นางร้าย";
+
+                // 2. เตรียมแพ็กเกจข้อมูลส่งเข้า Google Sheets
+                let dataToSave = {
+                    name: catProfile.name,
+                    age: catProfile.age,
+                    breed: catProfile.breed,
+                    weight: catProfile.weight,
+                    food: catProfile.food,
+                    result: resultType
+                };
+
+                // 🔴 3. เอา URL ที่ก๊อปมาจาก Google Sheets มาวางแทนข้อความภาษาไทยตรงนี้เลยครับ 🔴
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbx2BV0NXpelcwUSiqzLuwOsBpJ4x5o6y3tdqwo3Qu21ZfxeXSQUiq81dETEatQoli-s/exec';
+
+                // 4. ยิงข้อมูลเข้า Google Sheets
+                fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors', // ป้องกันการบล็อกข้ามเว็บไซต์
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dataToSave)
+                })
+                .then(response => console.log('ส่งข้อมูลเข้า Sheets สำเร็จ!'))
+                .catch(error => console.error('Error!', error.message));
             }
         }
 
