@@ -99,126 +99,129 @@
             align-items: center; justify-content: center; border-radius: 15px; color: #999; border: 2px dashed #CCC;
         }
 
-/* --- ดีไซน์บัตร ID Card ตามรูปเรฟเฟอเรนซ์ --- */
+/* --- ดีไซน์ใหม่: Minimalist Photocard / Ticket --- */
         .id-card-wrapper {
             position: relative;
-            margin: 80px auto 30px; /* เพิ่มพื้นที่ด้านบนให้สายคล้อง */
-            width: 260px;
+            margin: 40px auto 30px; 
+            width: 280px;
+            transition: transform 0.3s ease;
         }
 
-        /* สายคล้องคอซ้าย-ขวา */
-        .lanyard-left, .lanyard-right {
-            position: absolute;
-            width: 14px; height: 130px;
-            background-color: var(--text-color);
-            top: -110px; z-index: 1; /* อยู่หลังบัตร */
-        }
-        .lanyard-left { 
-            left: 50%; 
-            transform-origin: bottom left; 
-            transform: translateX(-100%) rotate(-32deg); 
-        }
-        .lanyard-right { 
-            right: 50%; 
-            transform-origin: bottom right; 
-            transform: translateX(100%) rotate(32deg); 
-        }
-        
-        /* คลิปสามเหลี่ยมที่เสียบเข้ารู (ชี้ลง) */
-        .lanyard-clip {
-            position: absolute;
-            width: 0; height: 0;
-            border-left: 18px solid transparent; 
-            border-right: 18px solid transparent;
-            border-top: 28px solid var(--text-color); /* เปลี่ยนเป็น top เพื่อให้สามเหลี่ยมชี้ลง */
-            top: -5px; /* ขยับลงมาทับขอบบัตร */
-            left: 50%; 
-            transform: translateX(-50%); 
-            z-index: 4; /* อยู่บนบัตร */
+        .id-card-wrapper:hover {
+            transform: translateY(-5px); /* ลูกเล่นเวลาเอาเมาส์ชี้ การ์ดจะลอยขึ้นนิดๆ */
         }
 
-        /* ตัวบัตร */
+        /* ตัวบัตรสไตล์คลีนๆ */
         .id-card {
-            background: var(--id-card-bg);
-            border: 2px solid var(--text-color);
-            border-radius: 12px;
-            padding: 25px 20px;
+            background: #FFFFFF;
+            border: 1px solid #EAEAEA;
+            border-radius: 20px;
+            padding: 30px 25px 25px;
             position: relative;
             z-index: 3;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            /* เงาละมุนๆ โทนน้ำตาลอ่อนให้ดูมีมิติเหมือนวางบนโต๊ะ */
+            box-shadow: 0 15px 35px rgba(83, 52, 34, 0.08), 0 5px 15px rgba(0,0,0,0.03); 
+            background-image: linear-gradient(to bottom, #FCFAFA 0%, #FFFFFF 15%);
         }
 
-        /* รูเจาะบัตร */
+        /* รูเจาะบัตรแบบแคปซูลเรียบหรู (ให้ดูเหมือนตั๋วหรือป้ายแท็ก) */
         .id-hole {
-            width: 45px; height: 12px;
-            background-color: var(--bg-color); /* สีเนียนไปกับพื้นหลังให้ดูเหมือนเจาะรู */
-            border: 2px solid var(--text-color);
+            width: 50px; 
+            height: 8px;
+            background-color: var(--bg-color); /* สีเนียนทะลุไปกับพื้นหลัง */
             border-radius: 10px;
-            margin: -12px auto 15px; /* ขยับรูเจาะให้พอดีกับปลายคลิปสามเหลี่ยม */
-            position: relative;
+            margin: -10px auto 25px; 
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06); /* เพิ่มมิติความลึกให้รูเจาะ */
         }
 
-        .id-name { font-size: 1.1rem; margin-bottom: 5px; color: var(--text-color); }
-        .id-role { font-size: 1.4rem; font-weight: 600; margin-bottom: 20px; color: var(--text-color); }
+        .id-name { 
+            font-size: 1.1rem; 
+            margin-bottom: 5px; 
+            color: var(--text-color); 
+            font-weight: 300;
+        }
+        
+        .id-role { 
+            font-size: 1.5rem; 
+            font-weight: 600; 
+            margin-bottom: 25px; 
+            color: var(--text-color); 
+            letter-spacing: 0.5px;
+        }
 
-        /* กรอบรูปภาพในบัตร */
+        /* กรอบรูปภาพในการ์ด */
         .id-photo-container {
-            width: 160px; height: 160px;
+            width: 180px; 
+            height: 180px;
             margin: 0 auto;
-            border: 1px solid var(--text-color);
-            background-color: #FFF;
+            border: 4px solid #FDFBF7;
+            background-color: #FAFAFA;
             position: relative;
-            border-radius: 4px;
-            overflow: visible; /* ให้แมวเกาะขอบทะลุออกไปได้ */
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            overflow: visible; 
         }
 
         .id-photo {
-            width: 100%; height: 100%;
+            width: 100%; 
+            height: 100%;
             object-fit: cover;
-            border-radius: 2px;
+            border-radius: 8px;
         }
 
         /* แมวจิ๋วเกาะกรอบรูป */
         .deco-cat {
             position: absolute;
-            top: -20px; right: -25px;
-            font-size: 40px; /* ใช้ Emoji แก้ขัด หรือเปลี่ยนเป็น img SVG ได้ */
-            transform: rotate(15deg);
+            bottom: -15px; 
+            right: -20px;
+            font-size: 45px; 
+            transform: rotate(-10deg);
+            filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.1));
         }
 
         /* ข้อความอธิบายด้านล่าง */
         .result-description {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin: 0 auto 30px;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin: 0 auto 25px;
             max-width: 320px;
             color: var(--text-color);
+            background: #FFFFFF;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(83, 52, 34, 0.05);
         }
 
         .result-tips {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 600;
             color: var(--text-color);
-            margin-bottom: 40px;
+            margin-bottom: 35px;
+            background: #F4EFE6; /* ไฮไลท์สีพื้นหลังทริคจัดห้องให้เด่นขึ้นนิดนึง */
+            padding: 15px 20px;
+            border-radius: 12px;
+            display: inline-block;
         }
         
-        .result-tips span { font-weight: 400; }
+        .result-tips span { font-weight: 400; display: block; margin-top: 5px; }
 
         .footer-credit {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--text-color);
-            opacity: 0.8;
-            margin-bottom: 20px;
+            opacity: 0.6;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        /* ลายแมวพาสเทลพื้นหลัง (จำลองด้วย CSS Shapes) */
+        /* ลายแมวพาสเทลพื้นหลัง (ปรับให้ละมุนขึ้น ไม่แย่งซีนการ์ด) */
         .bg-pattern {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: -1; display: none; overflow: hidden;
         }
-        .active .bg-pattern { display: block; } /* โชว์เฉพาะหน้า Result */
+        .active .bg-pattern { display: block; } 
         
-        .cat-shape { position: absolute; font-size: 100px; opacity: 0.15; }
+        .cat-shape { position: absolute; font-size: 100px; opacity: 0.1; filter: blur(1px); }
         .cat-shape.green { color: #D5E8D4; top: 10%; left: -5%; transform: rotate(-15deg); }
         .cat-shape.pink { color: #F8CECC; top: -5%; right: 5%; transform: rotate(20deg); font-size: 150px;}
         .cat-shape.green2 { color: #D5E8D4; bottom: 20%; left: 5%; transform: rotate(10deg); font-size: 120px;}
