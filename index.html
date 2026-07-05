@@ -437,8 +437,10 @@
             displayResultContent(modeAnswer);
         }
 
-        function calculateMode(arr) {
-            return arr.sort((a,b) => arr.filter(v => v===a).length - arr.filter(v => v===b).length).pop();
+       function calculateMode(arr) {
+            // สั่งให้ก็อปปี้ข้อมูลออกมาก่อนคำนวณ จะได้ไม่กินข้อมูลต้นฉบับหายไป
+            let tempArr = [...arr]; 
+            return tempArr.sort((a,b) => tempArr.filter(v => v===a).length - tempArr.filter(v => v===b).length).pop();
         }
 
         function displayResultContent(type) {
